@@ -4,7 +4,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/xiaofeiqiu/mlstock/handlers"
-	"github.com/xiaofeiqiu/mlstock/lib/logger"
+	"github.com/xiaofeiqiu/mlstock/lib/log"
 	"net/http"
 	"time"
 )
@@ -20,7 +20,7 @@ func main() {
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
-	r.Use(logger.NewMiddlewareLogger())
+	r.Use(log.NewMiddlewareLogger())
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.URLFormat)
 	r.Use(middleware.RedirectSlashes)

@@ -1,4 +1,4 @@
-package logger
+package log
 
 import (
 	"fmt"
@@ -119,4 +119,12 @@ func NewJsonLogger() *logrus.Logger {
 
 func NewTextLogger() *logrus.Logger {
 	return textLogger
+}
+
+func Info(event string, details string) {
+	jsonLogger.WithField("event", event).Info(details)
+}
+
+func Error(event string, details string) {
+	jsonLogger.WithField("event", event).Error(details)
 }
