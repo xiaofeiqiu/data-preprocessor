@@ -27,6 +27,13 @@ func ResponseWithJson(w http.ResponseWriter, code int, body interface{}) {
 	return
 }
 
+func NewErrorResponse(event string, body []byte) ErrorResponse {
+	return ErrorResponse{
+		Event: event,
+		Error: string(body),
+	}
+}
+
 func Is2xxStatusCode(status int) bool {
 	if status >= 200 && status < 300 {
 		return true
