@@ -12,6 +12,7 @@ import (
 const (
 	Timeout  = 60
 	Throttle = 10
+	ApiKeyPath = ".apiKey"
 )
 
 func main() {
