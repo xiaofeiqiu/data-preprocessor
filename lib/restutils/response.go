@@ -26,3 +26,24 @@ func ResponseWithJson(w http.ResponseWriter, code int, body interface{}) {
 	w.Write(jsonBody)
 	return
 }
+
+func Is2xxStatusCode(status int) bool {
+	if status >= 200 && status < 300 {
+		return true
+	}
+	return false
+}
+
+func Is4xxStatusCode(status int) bool {
+	if status >= 400 && status < 500 {
+		return true
+	}
+	return false
+}
+
+func Is5xxStatusCode(status int) bool {
+	if status >= 500 && status < 600 {
+		return true
+	}
+	return false
+}
