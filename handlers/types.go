@@ -1,5 +1,6 @@
 package handlers
 
 type ApiHandler struct {
-	Host string
+	Host   string
+	ApiKey string
 }
