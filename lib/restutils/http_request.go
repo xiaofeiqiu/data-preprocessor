@@ -11,7 +11,7 @@ import (
 const GET = "GET"
 
 type HttpClient struct {
-	client *http.Client
+	Client *http.Client
 }
 
 func (hc *HttpClient) doRequest(method string, url string, extraHeaders map[string]string, body []byte) (int, []byte, error) {
@@ -23,12 +23,13 @@ func (hc *HttpClient) doRequest(method string, url string, extraHeaders map[stri
 
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept-Encoding", "gzip,deflate")
+	req.Header.Set("Accept", "*/*")
 
 	for k, v := range extraHeaders {
 		req.Header.Set(k, v)
 	}
 
-	res, err := hc.client.Do(req)
+	res, err := hc.Client.Do(req)
 	if err != nil {
 		log.Error("GetRequest", fmt.Sprintf("Error executing the reqeust: %v", err))
 		return 0, nil, err

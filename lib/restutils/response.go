@@ -27,6 +27,13 @@ func ResponseWithJson(w http.ResponseWriter, code int, body interface{}) {
 	return
 }
 
+func ResponseWithJson1(w http.ResponseWriter, code int, body []byte) {
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(code)
+	w.Write(body)
+	return
+}
+
 func NewErrorResponse(event string, body []byte) ErrorResponse {
 	return ErrorResponse{
 		Event: event,

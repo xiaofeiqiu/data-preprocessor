@@ -1,4 +1,4 @@
-package IOutils
+package ioutils
 
 import (
 	"io/ioutil"

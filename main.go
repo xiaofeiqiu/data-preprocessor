@@ -6,7 +6,7 @@ import (
 	"github.com/xiaofeiqiu/mlstock/handlers"
 	"github.com/xiaofeiqiu/mlstock/lib/log"
 	"github.com/xiaofeiqiu/mlstock/lib/restutils"
-	"github.com/xiaofeiqiu/mlstock/services/IOutils"
+	"github.com/xiaofeiqiu/mlstock/services/ioutils"
 	"net/http"
 	"time"
 )
@@ -28,7 +28,7 @@ func main() {
 	r.Use(middleware.Timeout(Timeout * time.Second))
 	r.Use(middleware.Throttle(Throttle))
 
-	apiKey, err := IOutils.LoadApiKey(ApiKeyPath)
+	apiKey, err := ioutils.LoadApiKey(ApiKeyPath)
 	if err != nil {
 		log.Panic("Load api key", err.Error())
 	}
@@ -36,6 +36,9 @@ func main() {
 	apiHandler := handlers.ApiHandler{
 		Host:   "https://www.alphavantage.co",
 		ApiKey: apiKey,
+		HttpClient: &restutils.HttpClient{
+			Client: &http.Client{},
+		},
 	}
 
 	r.Get("/mlstock/health", restutils.Health)
