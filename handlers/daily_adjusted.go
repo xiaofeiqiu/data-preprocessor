@@ -6,6 +6,7 @@ import (
 	"errors"
 	"github.com/xiaofeiqiu/mlstock/lib/restutils"
 	"gopkg.in/go-playground/validator.v9"
+	"math"
 	"net/http"
 	"strconv"
 )
@@ -87,6 +88,13 @@ func readDailyResponseCSV(data []byte) ([]DailyResponse, error) {
 		resp.Close, _ = strconv.ParseFloat(line[4], 32)
 		resp.AdjustedClose, _ = strconv.ParseFloat(line[5], 32)
 		resp.Volume, _ = strconv.ParseInt(line[6], 10, 64)
+
+		resp.Open = math.Round(resp.Open*100)/100
+		resp.High = math.Round(resp.High*100)/100
+		resp.Low = math.Round(resp.Low*100)/100
+		resp.Close = math.Round(resp.Close*100)/100
+		resp.AdjustedClose = math.Round(resp.AdjustedClose*100)/100
+
 		resps = append(resps, resp)
 	}
 	return resps, nil
