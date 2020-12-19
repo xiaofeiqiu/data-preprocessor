@@ -128,3 +128,7 @@ func Info(event string, details string) {
 func Error(event string, details string) {
 	jsonLogger.WithField("event", event).Error(details)
 }
+
+func Panic(event string, details string) {
+	jsonLogger.WithField("event", event).Panic(details)
+}
