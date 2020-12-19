@@ -68,7 +68,7 @@ func (h *ApiHandler) GetDailyAdjusted(w http.ResponseWriter, r *http.Request) (i
 
 func readDailyResponseCSV(data []byte) ([]DailyResponse, error) {
 
-	resps := []DailyResponse{}
+	var resps []DailyResponse
 
 	r := csv.NewReader(bytes.NewReader(data))
 	lines, err := r.ReadAll()
