@@ -11,8 +11,8 @@ const Path = "/query"
 
 // data
 const OutputSizeFull = "full"
-const OutputSizeCompact = "compact"
-const DataTypeCsv = "csv"
+const Compact = "compact"
+const CSV = "csv"
 
 // time
 const TimePeriodDaily = "daily"

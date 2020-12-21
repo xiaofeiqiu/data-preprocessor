@@ -3,16 +3,15 @@ package handlers
 import (
 	"errors"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/restutils"
+	"github.com/xiaofeiqiu/data-preprocessor/services"
 	"net/http"
 )
 
-
-
 func (api *ApiHandler) GetDailyAdjusted(w http.ResponseWriter, r *http.Request) (int, error) {
 
-	status, body, err := api.AlphaVantageApi.GetDailyAdjusted(r)
+	status, body, err := api.AlphaVantageApi.Call(services.TIME_SERIES_DAILY_ADJUSTED, r)
 	if err != nil {
-		return status, errors.New("error calling GetDailyAdjusted, " + err.Error())
+		return status, errors.New("error calling Call, " + err.Error())
 	}
 
 	if restutils.Is2xxStatusCode(status) {

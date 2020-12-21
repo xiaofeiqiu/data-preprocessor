@@ -27,10 +27,11 @@ type DailyResponse struct {
 	N_Close       float64 `json:n_close`
 }
 
-func (api *AlphaVantageApi) GetDailyAdjusted(r *http.Request) (int, []byte, error) {
+func (api *AlphaVantageApi) Call(function string, r *http.Request) (int, []byte, error) {
+
 	req := DailyRequest{
-		Function: TIME_SERIES_DAILY_ADJUSTED,
-		DataType: DataTypeCsv,
+		DataType: CSV,
+		Function: function,
 	}
 
 	err := decoder.Decode(&req, r.URL.Query())
@@ -39,7 +40,7 @@ func (api *AlphaVantageApi) GetDailyAdjusted(r *http.Request) (int, []byte, erro
 	}
 
 	if req.OutputSize == "" {
-		req.OutputSize = OutputSizeCompact
+		req.OutputSize = Compact
 	}
 
 	err = validate.Struct(req)
@@ -48,7 +49,7 @@ func (api *AlphaVantageApi) GetDailyAdjusted(r *http.Request) (int, []byte, erro
 	}
 
 	url, err := api.GetUrl(req)
-	if err!=nil {
+	if err != nil {
 		return 400, nil, errors.New("error getting url, " + err.Error())
 	}
 	status, body, err := api.HttpClient.DoGet(url, nil)
