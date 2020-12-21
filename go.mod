@@ -1,4 +1,4 @@
-module github.com/xiaofeiqiu/mlstock
+module github.com/xiaofeiqiu/data-preprocessor
 
 go 1.15
 

@@ -3,18 +3,18 @@ package main
 import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
-	"github.com/xiaofeiqiu/mlstock/handlers"
-	"github.com/xiaofeiqiu/mlstock/lib/log"
-	"github.com/xiaofeiqiu/mlstock/lib/restutils"
-	"github.com/xiaofeiqiu/mlstock/services/ioutils"
+	"github.com/xiaofeiqiu/data-preprocessor/handlers"
+	"github.com/xiaofeiqiu/data-preprocessor/lib/log"
+	"github.com/xiaofeiqiu/data-preprocessor/lib/restutils"
 	"net/http"
+	"os"
 	"time"
 )
 
 const (
 	Timeout    = 60
 	Throttle   = 10
-	ApiKeyPath = ".apiKey"
+	AlphaVantageKey = "ALPHA_VANTAGE"
 )
 
 func main() {
@@ -28,9 +28,9 @@ func main() {
 	r.Use(middleware.Timeout(Timeout * time.Second))
 	r.Use(middleware.Throttle(Throttle))
 
-	apiKey, err := ioutils.LoadApiKey(ApiKeyPath)
-	if err != nil {
-		log.Panic("Load api key", err.Error())
+	apiKey := os.Getenv(AlphaVantageKey)
+	if apiKey == "" {
+		log.Fatal("GetApiKey","Api key not found")
 	}
 
 	apiHandler := handlers.ApiHandler{

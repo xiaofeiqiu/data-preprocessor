@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"github.com/xiaofeiqiu/mlstock/lib/log"
-	"github.com/xiaofeiqiu/mlstock/lib/restutils"
+	"github.com/xiaofeiqiu/data-preprocessor/lib/log"
+	"github.com/xiaofeiqiu/data-preprocessor/lib/restutils"
 	"net/http"
 	"reflect"
 	"runtime"

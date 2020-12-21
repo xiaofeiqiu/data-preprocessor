@@ -3,7 +3,7 @@ package handlers
 import (
 	"fmt"
 	"github.com/gorilla/schema"
-	"github.com/xiaofeiqiu/mlstock/lib/restutils"
+	"github.com/xiaofeiqiu/data-preprocessor/lib/restutils"
 )
 
 const Path = "/query"

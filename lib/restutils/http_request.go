@@ -3,7 +3,7 @@ package restutils
 import (
 	"bytes"
 	"fmt"
-	"github.com/xiaofeiqiu/mlstock/lib/log"
+	"github.com/xiaofeiqiu/data-preprocessor/lib/log"
 	"io/ioutil"
 	"net/http"
 )
