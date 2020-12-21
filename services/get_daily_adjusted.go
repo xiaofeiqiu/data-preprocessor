@@ -27,6 +27,7 @@ type DailyResponse struct {
 	AdjustedClose float64 `json:adjusted_close`
 	Volume        int64   `json:volume`
 	Change        float64 `json:change`
+	N_Close       float64 `json:n_close`
 }
 
 func (api *AlphaVantageApi) GetDailyAdjusted(r *http.Request) (int, []byte, error) {

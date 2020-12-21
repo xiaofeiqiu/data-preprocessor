@@ -58,10 +58,8 @@ func readCandles(line []string) (*services.DailyResponse, error) {
 func SetStats(dailyResps []*services.DailyResponse) {
 	for _, resp := range dailyResps {
 		SetChange(resp)
+		SetNClose(resp)
 	}
 }
 
-func SetChange(input *services.DailyResponse) {
-	tmp := (input.Close - input.Open) * 100 / input.Open
-	input.Change = math.Round(tmp*100) / 100
-}
+
