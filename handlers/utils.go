@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"encoding/csv"
 	"errors"
+	"github.com/xiaofeiqiu/data-preprocessor/services"
 	"math"
 	"strconv"
 )
 
-func ToDailyResponseArray(data []byte) ([]*DailyResponse, error) {
+func ToDailyResponseArray(data []byte) ([]*services.DailyResponse, error) {
 
-	var resps []*DailyResponse
+	var resps []*services.DailyResponse
 
 	r := csv.NewReader(bytes.NewReader(data))
 	lines, err := r.ReadAll()
@@ -30,8 +31,8 @@ func ToDailyResponseArray(data []byte) ([]*DailyResponse, error) {
 	return resps, nil
 }
 
-func readCandles(line []string) (*DailyResponse, error) {
-	resp := &DailyResponse{}
+func readCandles(line []string) (*services.DailyResponse, error) {
+	resp := &services.DailyResponse{}
 	resp.Timestamp = line[0]
 	var err error
 	resp.Open, err = strconv.ParseFloat(line[1], 32)
@@ -54,13 +55,13 @@ func readCandles(line []string) (*DailyResponse, error) {
 	return resp, nil
 }
 
-func SetStats(dailyResps []*DailyResponse) {
+func SetStats(dailyResps []*services.DailyResponse) {
 	for _, resp := range dailyResps {
 		SetChange(resp)
 	}
 }
 
-func SetChange(input *DailyResponse) {
+func SetChange(input *services.DailyResponse) {
 	tmp := (input.Close - input.Open) * 100 / input.Open
 	input.Change = math.Round(tmp*100) / 100
 }

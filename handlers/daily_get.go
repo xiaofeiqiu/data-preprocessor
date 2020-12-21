@@ -6,16 +6,7 @@ import (
 	"net/http"
 )
 
-type DailyResponse struct {
-	Timestamp     string  `json:timestamp`
-	Open          float64 `json:open`
-	High          float64 `json:high`
-	Low           float64 `json:low`
-	Close         float64 `json:close`
-	AdjustedClose float64 `json:adjusted_close`
-	Volume        int64   `json:volume`
-	Change        float64 `json:change`
-}
+
 
 func (api *ApiHandler) GetDailyAdjusted(w http.ResponseWriter, r *http.Request) (int, error) {
 
