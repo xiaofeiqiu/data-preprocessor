@@ -5,6 +5,7 @@ go 1.15
 require (
 	github.com/go-chi/chi v1.5.1
 	github.com/go-playground/universal-translator v0.17.0 // indirect
+	github.com/google/go-querystring v1.0.0
 	github.com/gorilla/schema v1.2.0
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mitchellh/mapstructure v1.4.0 // indirect

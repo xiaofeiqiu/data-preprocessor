@@ -2,15 +2,17 @@ package services
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 )
 
 type DailyRequest struct {
-	Symbol     string `validate:"required" schema:"symbol"`
-	OutputSize string `schema:"outputsize"`
-	Function   string `validate:"required"`
-	DataType   string `validate:"required"`
+	Symbol     string `validate:"required" schema:"symbol" url:"symbol"`
+	OutputSize string `schema:"outputsize" url:"outputsize"`
+	Function   string `validate:"required" url:"function"`
+	DataType   string `validate:"required" url:"datatype"`
+	Interval   string `schema:interval url:"interval"`
+	TimePeriod string `schema:time_period url:"time_period"`
+	SeriesType string `schema:series_type url:"series_type"`
 }
 
 type DailyResponse struct {
@@ -45,15 +47,14 @@ func (api *AlphaVantageApi) GetDailyAdjusted(r *http.Request) (int, []byte, erro
 		return 400, nil, errors.New("request validation failed, " + err.Error())
 	}
 
-	url := api.GetUrl(req)
+	url, err := api.GetUrl(req)
+	if err!=nil {
+		return 400, nil, errors.New("error getting url, " + err.Error())
+	}
 	status, body, err := api.HttpClient.DoGet(url, nil)
 	if err != nil {
 		return 500, nil, errors.New("error calling alpha vantage, " + err.Error())
 	}
 
 	return status, body, nil
-}
-
-func (h *AlphaVantageApi) GetUrl(req DailyRequest) string {
-	return fmt.Sprintf("%s%s?%s=%s&%s=%s&%s=%s&%s=%s&%s=%s", h.Host, Path, Symbol, req.Symbol, Function, req.Function, OutputSize, req.OutputSize, ApiKey, h.ApiKey, DataType, req.DataType)
 }
