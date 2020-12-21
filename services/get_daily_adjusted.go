@@ -3,13 +3,8 @@ package services
 import (
 	"errors"
 	"fmt"
-	"gopkg.in/go-playground/validator.v9"
 	"net/http"
 )
-
-var validate = validator.New()
-
-const TIME_SERIES_DAILY_ADJUSTED = "TIME_SERIES_DAILY_ADJUSTED"
 
 type DailyRequest struct {
 	Symbol     string `validate:"required" schema:"symbol"`
@@ -42,7 +37,7 @@ func (api *AlphaVantageApi) GetDailyAdjusted(r *http.Request) (int, []byte, erro
 	}
 
 	if req.OutputSize == "" {
-		req.OutputSize = OutputCompact
+		req.OutputSize = OutputSizeCompact
 	}
 
 	err = validate.Struct(req)

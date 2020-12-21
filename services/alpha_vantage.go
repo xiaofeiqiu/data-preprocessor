@@ -3,21 +3,39 @@ package services
 import (
 	"github.com/gorilla/schema"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/restutils"
+	"gopkg.in/go-playground/validator.v9"
 )
 
 const Path = "/query"
 
+// params
 const Symbol = "symbol"
 const OutputSize = "outputsize"
 const Function = "function"
 const ApiKey = "apikey"
 const DataType = "datatype"
+const TimePeriod = "time_period"
+const Interval = "interval"
+const SeriesType = "series_type"
 
-const OutputFull = "full"
-const OutputCompact = "compact"
+// data
+const OutputSizeFull = "full"
+const OutputSizeCompact = "compact"
 const DataTypeCsv = "csv"
 
+// time
+const TimePeriodDaily = "daily"
+const TimePeriod8 = "8"
+const TimePeriod60 = "60"
+const SeriesTypeClose = "close"
+
+// functions
+const EMA = "EMA"
+const TIME_SERIES_DAILY_ADJUSTED = "TIME_SERIES_DAILY_ADJUSTED"
+
+
 var decoder = schema.NewDecoder()
+var validate = validator.New()
 
 type AlphaVantageApi struct {
 	Host       string
