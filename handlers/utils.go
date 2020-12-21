@@ -9,9 +9,9 @@ import (
 	"strconv"
 )
 
-type DataReader func(line []string) (*alphavantage.DailyResponse, error)
+type DataReader func(symbol string, line []string) (*alphavantage.DailyResponse, error)
 
-func ToDailyResponseArray(data []byte, reader DataReader) ([]*alphavantage.DailyResponse, error) {
+func ReadCsvData(symbol string, data []byte, reader DataReader) ([]*alphavantage.DailyResponse, error) {
 
 	var resps []*alphavantage.DailyResponse
 
@@ -26,7 +26,7 @@ func ToDailyResponseArray(data []byte, reader DataReader) ([]*alphavantage.Daily
 	var theError error
 
 	for _, line := range lines {
-		resp, err := reader(line)
+		resp, err := reader(symbol, line)
 		if err != nil {
 			theError = err
 			continue
@@ -41,9 +41,10 @@ func ToDailyResponseArray(data []byte, reader DataReader) ([]*alphavantage.Daily
 	return resps, nil
 }
 
-func CandleReader(line []string) (*alphavantage.DailyResponse, error) {
+func CandleReader(symbol string, line []string) (*alphavantage.DailyResponse, error) {
 	resp := &alphavantage.DailyResponse{}
 	resp.Timestamp = line[0]
+	resp.Symbol = symbol
 
 	var err error
 	var theError error
@@ -86,10 +87,11 @@ func CandleReader(line []string) (*alphavantage.DailyResponse, error) {
 	return resp, nil
 }
 
-func EMA_8_Reader(line []string) (*alphavantage.DailyResponse, error) {
+func EMA_8_Reader(symbol string, line []string) (*alphavantage.DailyResponse, error) {
 	var err error
 	resp := &alphavantage.DailyResponse{}
 	resp.Timestamp = line[0]
+	resp.Symbol = symbol
 	resp.EMA_Daily_8, err = strconv.ParseFloat(line[1], 32)
 	if err != nil {
 		return nil, err

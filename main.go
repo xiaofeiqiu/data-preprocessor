@@ -46,7 +46,8 @@ func main() {
 		AlphaVantageApi: alphaVantageApi,
 	}
 
-	r.Get("/mlstock/health", restutils.Health)
-	r.Get("/mlstock/dailyadjusted", handlers.ErrorHandler(apiHandler.InsertDailyAdjusted))
+	r.Get("/preprocessor/health", restutils.Health)
+	r.Post("/preprocessor/candle/dailyadjusted", handlers.ErrorHandler(apiHandler.InsertDailyCandle))
+	r.Put("/preprocessor/ema8/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyEMA))
 	http.ListenAndServe(":8080", r)
 }
