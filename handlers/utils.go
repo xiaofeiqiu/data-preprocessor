@@ -8,9 +8,9 @@ import (
 	"strconv"
 )
 
-func ToDailyResponseArray(data []byte) ([]DailyResponse, error) {
+func ToDailyResponseArray(data []byte) ([]*DailyResponse, error) {
 
-	var resps []DailyResponse
+	var resps []*DailyResponse
 
 	r := csv.NewReader(bytes.NewReader(data))
 	lines, err := r.ReadAll()
@@ -25,8 +25,7 @@ func ToDailyResponseArray(data []byte) ([]DailyResponse, error) {
 		if err != nil {
 			return nil, errors.New("error reading values, " + err.Error())
 		}
-		SetStats(resp)
-		resps = append(resps, *resp)
+		resps = append(resps, resp)
 	}
 	return resps, nil
 }
@@ -55,10 +54,13 @@ func readCandles(line []string) (*DailyResponse, error) {
 	return resp, nil
 }
 
-func SetStats(dailyResps *DailyResponse) {
-	SetChange(dailyResps)
+func SetStats(dailyResps []*DailyResponse) {
+	for _, resp := range dailyResps {
+		SetChange(resp)
+	}
 }
 
 func SetChange(input *DailyResponse) {
-	input.Change = math.Round((input.Close - input.Open) * 100 / input.Open) / 100
+	tmp := (input.Close - input.Open) * 100 / input.Open
+	input.Change = math.Round(tmp*100) / 100
 }

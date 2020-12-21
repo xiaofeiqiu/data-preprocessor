@@ -3,13 +3,8 @@ package handlers
 import (
 	"errors"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/restutils"
-	"gopkg.in/go-playground/validator.v9"
 	"net/http"
 )
-
-var validate = validator.New()
-
-const TIME_SERIES_DAILY_ADJUSTED = "TIME_SERIES_DAILY_ADJUSTED"
 
 type DailyResponse struct {
 	Timestamp     string  `json:timestamp`
@@ -22,30 +17,11 @@ type DailyResponse struct {
 	Change        float64 `json:change`
 }
 
-func (h *ApiHandler) GetDailyAdjusted(w http.ResponseWriter, r *http.Request) (int, error) {
-	req := MLStockRequest{
-		Function: TIME_SERIES_DAILY_ADJUSTED,
-		DataType: DataTypeCsv,
-	}
+func (api *ApiHandler) GetDailyAdjusted(w http.ResponseWriter, r *http.Request) (int, error) {
 
-	err := decoder.Decode(&req, r.URL.Query())
+	status, body, err := api.AlphaVantageApi.GetDailyAdjusted(r)
 	if err != nil {
-		return 400, errors.New("error decoding query params, " + err.Error())
-	}
-
-	if req.OutputSize == "" {
-		req.OutputSize = OutputCompact
-	}
-
-	err = validate.Struct(req)
-	if err != nil {
-		return 400, errors.New("request validation failed, " + err.Error())
-	}
-
-	url := h.GetUrl(req)
-	status, body, err := h.HttpClient.DoGet(url, nil)
-	if err != nil {
-		return 500, errors.New("error calling downstream api, " + err.Error())
+		return status, errors.New("error calling GetDailyAdjusted, " + err.Error())
 	}
 
 	if restutils.Is2xxStatusCode(status) {
@@ -53,6 +29,7 @@ func (h *ApiHandler) GetDailyAdjusted(w http.ResponseWriter, r *http.Request) (i
 		if err != nil {
 			return 500, errors.New("error reading response, " + err.Error())
 		}
+		SetStats(resp)
 		restutils.ResponseWithJson(w, 200, resp)
 		return 0, nil
 	}

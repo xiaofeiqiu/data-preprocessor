@@ -6,6 +6,7 @@ import (
 	"github.com/xiaofeiqiu/data-preprocessor/handlers"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/log"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/restutils"
+	"github.com/xiaofeiqiu/data-preprocessor/services"
 	"net/http"
 	"os"
 	"time"
@@ -33,12 +34,16 @@ func main() {
 		log.Fatal("GetApiKey","Api key not found")
 	}
 
-	apiHandler := handlers.ApiHandler{
+	alphaVantageApi := &services.AlphaVantageApi{
 		Host:   "https://www.alphavantage.co",
 		ApiKey: apiKey,
 		HttpClient: &restutils.HttpClient{
 			Client: &http.Client{},
 		},
+	}
+
+	apiHandler := handlers.ApiHandler{
+		AlphaVantageApi: alphaVantageApi,
 	}
 
 	r.Get("/mlstock/health", restutils.Health)
