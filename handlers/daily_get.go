@@ -31,8 +31,9 @@ func (api *ApiHandler) GetDailyAdjusted(w http.ResponseWriter, r *http.Request) 
 		}
 		SetStats(resp)
 		restutils.ResponseWithJson(w, 200, resp)
-		return 0, nil
 	}
+
+
 
 	return 500, errors.New("unexpected error occurred")
 }

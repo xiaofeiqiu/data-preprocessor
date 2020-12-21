@@ -33,7 +33,7 @@ func (api *AlphaVantageApi) GetDailyAdjusted(r *http.Request) (int, []byte, erro
 	url := api.GetUrl(req)
 	status, body, err := api.HttpClient.DoGet(url, nil)
 	if err != nil {
-		return 500, nil, errors.New("unexpected error occurred, " + err.Error())
+		return 500, nil, errors.New("error calling alpha vantage, " + err.Error())
 	}
 
 	return status, body, nil
