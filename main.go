@@ -6,7 +6,7 @@ import (
 	"github.com/xiaofeiqiu/data-preprocessor/handlers"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/log"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/restutils"
-	"github.com/xiaofeiqiu/data-preprocessor/services"
+	"github.com/xiaofeiqiu/data-preprocessor/services/alphavantage"
 	"net/http"
 	"os"
 	"time"
@@ -34,7 +34,7 @@ func main() {
 		log.Fatal("GetApiKey","Api key not found")
 	}
 
-	alphaVantageApi := &services.AlphaVantageApi{
+	alphaVantageApi := &alphavantage.AlphaVantageApi{
 		Host:   "https://www.alphavantage.co",
 		ApiKey: apiKey,
 		HttpClient: &restutils.HttpClient{
@@ -47,6 +47,6 @@ func main() {
 	}
 
 	r.Get("/mlstock/health", restutils.Health)
-	r.Get("/mlstock/dailyadjusted", handlers.ErrorHandler(apiHandler.GetDailyAdjusted))
+	r.Get("/mlstock/dailyadjusted", handlers.ErrorHandler(apiHandler.InsertDailyAdjusted))
 	http.ListenAndServe(":8080", r)
 }

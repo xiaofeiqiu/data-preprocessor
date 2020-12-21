@@ -1,9 +1,39 @@
-package services
+package alphavantage
 
 import (
 	"errors"
+	"github.com/google/go-querystring/query"
+	"github.com/gorilla/schema"
+	"github.com/xiaofeiqiu/data-preprocessor/lib/restutils"
+	"gopkg.in/go-playground/validator.v9"
 	"net/http"
 )
+
+const Path = "/query"
+
+// data
+const OutputSizeFull = "full"
+const Compact = "compact"
+const CSV = "csv"
+
+// time
+const Daily = "daily"
+const TimePeriod8 = "8"
+const TimePeriod60 = "60"
+const Close = "close"
+
+// functions
+const EMA = "EMA"
+const TIME_SERIES_DAILY_ADJUSTED = "TIME_SERIES_DAILY_ADJUSTED"
+
+var decoder = schema.NewDecoder()
+var validate = validator.New()
+
+type AlphaVantageApi struct {
+	Host       string
+	ApiKey     string
+	HttpClient *restutils.HttpClient
+}
 
 type DailyRequest struct {
 	Symbol     string `validate:"required" schema:"symbol" url:"symbol"`
@@ -79,4 +109,13 @@ func setDefaultParams(function string, request *DailyRequest) {
 			request.TimePeriod = "8"
 		}
 	}
+}
+
+func (h *AlphaVantageApi) GetUrl(req DailyRequest) (string, error) {
+	params, err := query.Values(req)
+	if err != nil {
+		return "", err
+	}
+	url := h.Host + Path + "?" + params.Encode() + "&apikey="+h.ApiKey
+	return url, nil
 }

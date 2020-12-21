@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"github.com/xiaofeiqiu/data-preprocessor/services"
+	"github.com/xiaofeiqiu/data-preprocessor/services/alphavantage"
 )
 
 type ApiHandler struct {
-	AlphaVantageApi *services.AlphaVantageApi
+	AlphaVantageApi *alphavantage.AlphaVantageApi
 }
 
 
