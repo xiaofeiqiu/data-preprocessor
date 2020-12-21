@@ -31,6 +31,40 @@ func ToDailyResponseArray(data []byte) ([]*services.DailyResponse, error) {
 	return resps, nil
 }
 
+func SetEMA(resp []*services.DailyResponse, data []byte) error {
+
+	respsMap := make(map[string]*services.DailyResponse)
+
+	for _, v := range resp {
+		respsMap[v.Timestamp] = v
+	}
+
+	r := csv.NewReader(bytes.NewReader(data))
+	lines, err := r.ReadAll()
+	if err != nil {
+		return err
+	}
+
+	lines = lines[1:]
+
+	var theError error
+
+	for _, line := range lines {
+		timeStamp := line[0]
+		if respsMap[timeStamp] != nil {
+			respsMap[timeStamp].EMA_Daily_8, err = strconv.ParseFloat(line[1], 32)
+		}
+		if err != nil {
+			theError = err
+		}
+	}
+
+	if theError != nil {
+		return theError
+	}
+	return nil
+}
+
 func readCandles(line []string) (*services.DailyResponse, error) {
 	resp := &services.DailyResponse{}
 	resp.Timestamp = line[0]
@@ -61,5 +95,3 @@ func SetStats(dailyResps []*services.DailyResponse) {
 		SetNClose(resp)
 	}
 }
-
-

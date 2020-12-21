@@ -15,10 +15,10 @@ const Compact = "compact"
 const CSV = "csv"
 
 // time
-const TimePeriodDaily = "daily"
+const Daily = "daily"
 const TimePeriod8 = "8"
 const TimePeriod60 = "60"
-const SeriesTypeClose = "close"
+const Close = "close"
 
 // functions
 const EMA = "EMA"
