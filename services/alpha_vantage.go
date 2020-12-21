@@ -9,16 +9,6 @@ import (
 
 const Path = "/query"
 
-// params
-const Symbol = "symbol"
-const OutputSize = "outputsize"
-const Function = "function"
-const ApiKey = "apikey"
-const DataType = "datatype"
-const TimePeriod = "time_period"
-const Interval = "interval"
-const SeriesType = "series_type"
-
 // data
 const OutputSizeFull = "full"
 const OutputSizeCompact = "compact"
