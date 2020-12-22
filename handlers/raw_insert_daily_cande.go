@@ -37,8 +37,7 @@ func (api *ApiHandler) InsertDailyCandle(w http.ResponseWriter, r *http.Request)
 		if err != nil {
 			return 500, errors.New("error reading response, " + err.Error())
 		}
-		SetStats(resp)
-
+		SetChanges(resp)
 		// todo: insert to db
 		restutils.ResponseWithJson(w, 200, resp)
 		return 0, nil
