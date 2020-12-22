@@ -50,7 +50,7 @@ type DailyResponse struct {
 	Volume        int64   `json:"volume"`
 	Change        float64 `json:"change"`
 	N_Close       float64 `json:"n_close"`
-	EMA_Daily_8   float64 `json:"ema_daily_8"`
+	EMA_8N_Daily  float64 `json:"ema_daily_8"`
 }
 
 func (api *AlphaVantageApi) Call(req DailyRequest) (int, []byte, error) {

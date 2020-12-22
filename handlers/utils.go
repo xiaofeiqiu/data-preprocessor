@@ -92,7 +92,7 @@ func EMA_8_Reader(symbol string, line []string) (*alphavantage.DailyResponse, er
 	resp := &alphavantage.DailyResponse{}
 	resp.Timestamp = line[0]
 	resp.Symbol = symbol
-	resp.EMA_Daily_8, err = strconv.ParseFloat(line[1], 32)
+	resp.EMA_8N_Daily, err = strconv.ParseFloat(line[1], 32)
 	if err != nil {
 		return nil, err
 	}
