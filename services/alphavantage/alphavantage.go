@@ -40,16 +40,16 @@ type DailyRequest struct {
 }
 
 type DailyResponse struct {
-	Symbol        string  `json:"symbol"`
-	Timestamp     string  `json:"timestamp"`
-	Open          float64 `json:"open"`
-	High          float64 `json:"high"`
-	Low           float64 `json:"low"`
-	Close         float64 `json:"close"`
-	AdjustedClose float64 `json:"adjusted_close"`
-	Volume        int64   `json:"volume"`
-	Change        float64 `json:"change"`
-	EMA_8         float64 `json:"ema_8"`
+	Symbol        string   `json:"symbol"`
+	Timestamp     string   `json:"timestamp"`
+	Open          float64  `json:"open"`
+	High          float64  `json:"high"`
+	Low           float64  `json:"low"`
+	Close         float64  `json:"close"`
+	AdjustedClose float64  `json:"adjusted_close"`
+	Volume        int64    `json:"volume"`
+	Change        float64  `json:"change"`
+	EMA_8         *float64 `json:"ema_8,omitempty"`
 }
 
 func (api *AlphaVantageApi) Call(req DailyRequest) (int, []byte, error) {
