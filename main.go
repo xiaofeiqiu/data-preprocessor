@@ -9,6 +9,7 @@ import (
 	"github.com/xiaofeiqiu/data-preprocessor/lib/restutils"
 	"github.com/xiaofeiqiu/data-preprocessor/services/alphavantage"
 	"github.com/xiaofeiqiu/data-preprocessor/internal"
+	"github.com/xiaofeiqiu/data-preprocessor/services/dbservice"
 	"net/http"
 	"time"
 )
@@ -53,12 +54,14 @@ func main() {
 	}
 	log.Info("Init", "Create db client successful")
 
+	dbService := dbservice.NewDBService(dbClient)
+
 	apiHandler := handlers.ApiHandler{
 		AlphaVantageClient: alphaVantageApi,
-		DBClient:           dbClient,
+		DBService:          dbService,
 	}
 
-	err = apiHandler.InitDBTableMapping()
+	err = apiHandler.DBService.InitDBTableMapping()
 	if err != nil {
 		log.Fatal("Init", "error init db table mapping")
 	}
@@ -68,5 +71,5 @@ func main() {
 	r.Post("/preprocessor/candle/missingdailyadjusted", handlers.ErrorHandler(apiHandler.InsertMissingDailyCandle))
 	r.Put("/preprocessor/ema8/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyEMA))
 	http.ListenAndServe(":8080", r)
-	log.Info("Init","Server started")
+	log.Info("Init", "Server started")
 }

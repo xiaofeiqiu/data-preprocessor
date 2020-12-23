@@ -47,7 +47,7 @@ func (api *ApiHandler) InsertDailyCandle(w http.ResponseWriter, r *http.Request)
 			return 500, errors.New("error reading response, " + err.Error())
 		}
 		SetChanges(resp)
-		err = api.DBClient.BulkInsert(ToInterfaceArray(resp), true)
+		err = api.DBService.BulkInsertRawDataEntity(resp)
 		if err != nil {
 			return 500, err
 		}
@@ -96,7 +96,7 @@ func (api *ApiHandler) InsertMissingDailyCandle(w http.ResponseWriter, r *http.R
 			return 500, errors.New("error reading response, " + err.Error())
 		}
 		SetChanges(resp)
-		api.insertMissing(resp)
+		api.DBService.InsertRawDataEntityIgnoreError(resp)
 		restutils.ResponseWithJson(w, 200, "Insert missing successful")
 		return 0, nil
 	}
@@ -108,19 +108,4 @@ func (api *ApiHandler) InsertMissingDailyCandle(w http.ResponseWriter, r *http.R
 	}
 
 	return 500, errors.New("unexpected error occurred")
-}
-
-func (api *ApiHandler) insertMissing(data []*dbservice.RawDataEntity) {
-
-	log.Info("insertMissing", "Inserting missing daily raw data")
-
-	count := 0
-	for _, v := range data {
-		err := api.DBClient.Insert(v)
-		if err == nil {
-			count++
-		}
-	}
-
-	log.Info("insertMissing", "Inserted "+strconv.Itoa(count))
 }
