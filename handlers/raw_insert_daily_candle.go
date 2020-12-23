@@ -8,6 +8,7 @@ import (
 	"github.com/xiaofeiqiu/data-preprocessor/services/alphavantage"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
 func (api *ApiHandler) InsertDailyCandle(w http.ResponseWriter, r *http.Request) (int, error) {
@@ -26,14 +27,18 @@ func (api *ApiHandler) InsertDailyCandle(w http.ResponseWriter, r *http.Request)
 	if err != nil {
 		return 400, errors.New("request validation failed, " + err.Error())
 	}
+	log.Info("InsertDailyCandle", "Valid InsertDailyCandle request")
 
 	status, body, err := api.AlphaVantageClient.Call(req)
 	if err != nil {
 		return status, errors.New("error calling FUNC_TIME_SERIES_DAILY_ADJUSTED, " + err.Error())
 	}
+	log.Info("InsertDailyCandle", "Call alpha vantage successful")
+
 
 	resp := []*RawDataEntity{}
 	if restutils.Is2xxStatusCode(status) {
+		log.Info("InsertDailyCandle", "Alpha vantage returns 200 status code")
 		resp, err = ReadCsvData(req.Symbol, body, CandleReader)
 		if err != nil {
 			return 500, errors.New("error reading response, " + err.Error())
@@ -44,6 +49,12 @@ func (api *ApiHandler) InsertDailyCandle(w http.ResponseWriter, r *http.Request)
 			return 500, err
 		}
 		restutils.ResponseWithJson(w, 200, resp)
+		return 0, nil
+	}
+
+	if restutils.Is4xxStatusCode(status) || restutils.Is5xxStatusCode(status) {
+		log.Info("InsertDailyCandle", "Alpha vantage returns "+strconv.Itoa(status))
+		restutils.ResponseWithJson(w, status, string(body))
 		return 0, nil
 	}
 
@@ -66,14 +77,17 @@ func (api *ApiHandler) InsertMissingDailyCandle(w http.ResponseWriter, r *http.R
 	if err != nil {
 		return 400, errors.New("request validation failed, " + err.Error())
 	}
+	log.Info("InsertMissingDailyCandle", "Valid InsertMissingDailyCandle request")
 
 	status, body, err := api.AlphaVantageClient.Call(req)
 	if err != nil {
 		return status, errors.New("error calling FUNC_TIME_SERIES_DAILY_ADJUSTED, " + err.Error())
 	}
+	log.Info("InsertMissingDailyCandle", "Call alpha vantage successful")
 
 	resp := []*RawDataEntity{}
 	if restutils.Is2xxStatusCode(status) {
+		log.Info("InsertMissingDailyCandle", "Alpha vantage returns 200 status code")
 		resp, err = ReadCsvData(req.Symbol, body, CandleReader)
 		if err != nil {
 			return 500, errors.New("error reading response, " + err.Error())
@@ -81,6 +95,12 @@ func (api *ApiHandler) InsertMissingDailyCandle(w http.ResponseWriter, r *http.R
 		SetChanges(resp)
 		api.insertMissing(resp)
 		restutils.ResponseWithJson(w, 200, resp)
+		return 0, nil
+	}
+
+	if restutils.Is4xxStatusCode(status) || restutils.Is5xxStatusCode(status) {
+		log.Info("InsertMissingDailyCandle", "Alpha vantage returns "+strconv.Itoa(status))
+		restutils.ResponseWithJson(w, status, string(body))
 		return 0, nil
 	}
 
