@@ -6,6 +6,7 @@ import (
 	"errors"
 	"math"
 	"strconv"
+	"time"
 )
 
 type DataReader func(symbol string, line []string) (*RawDataEntity, error)
@@ -41,12 +42,16 @@ func ReadCsvData(symbol string, data []byte, reader DataReader) ([]*RawDataEntit
 }
 
 func CandleReader(symbol string, line []string) (*RawDataEntity, error) {
-	resp := &RawDataEntity{}
-	resp.Date = line[0]
-	resp.Symbol = symbol
-
 	var err error
 	var theError error
+
+	resp := &RawDataEntity{}
+	resp.Date, err = time.Parse("2006-01-02", line[0])
+	if err != nil {
+		theError = err
+	}
+
+	resp.Symbol = symbol
 
 	resp.Open, err = strconv.ParseFloat(line[1], 32)
 	if err != nil {
@@ -89,7 +94,10 @@ func CandleReader(symbol string, line []string) (*RawDataEntity, error) {
 func EMA_8_Reader(symbol string, line []string) (*RawDataEntity, error) {
 	var err error
 	resp := &RawDataEntity{}
-	resp.Date = line[0]
+	resp.Date, err = time.Parse("2006-01-02", line[0])
+	if err != nil {
+		return nil, err
+	}
 	resp.Symbol = symbol
 	tmp, err := strconv.ParseFloat(line[1], 32)
 	resp.EMA_8 = &tmp
