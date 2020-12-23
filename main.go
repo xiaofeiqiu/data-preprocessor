@@ -57,11 +57,6 @@ func main() {
 
 	apiHandler.InitDBTableMapping()
 
-	//err = apiHandler.DBClient.CreateTableIfNotExist("daily_raw_data", alphavantage.RawDataEntity{})
-	//if err != nil {
-	//	log.Fatal("error", err.Error())
-	//}
-
 	r.Get("/preprocessor/health", restutils.Health)
 	r.Post("/preprocessor/candle/dailyadjusted", handlers.ErrorHandler(apiHandler.InsertDailyCandle))
 	r.Post("/preprocessor/candle/missingdailyadjusted", handlers.ErrorHandler(apiHandler.InsertMissingDailyCandle))
