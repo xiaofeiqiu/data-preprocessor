@@ -1,9 +1,10 @@
 package handlers
 
 import (
+	"encoding/json"
+	"github.com/xiaofeiqiu/data-preprocessor/lib/db"
 	"github.com/xiaofeiqiu/data-preprocessor/services/alphavantage"
 	"gopkg.in/go-playground/validator.v9"
-	"github.com/xiaofeiqiu/data-preprocessor/lib/db"
 	"time"
 )
 
@@ -33,4 +34,9 @@ type ApiHandler struct {
 func (api *ApiHandler) InitDBTableMapping() {
 	api.DBClient.DB.AddTableWithName(RawDataEntity{}, dailyRawData)
 	api.DBClient.DB.CreateTablesIfNotExists()
+}
+
+func (e *RawDataEntity) ToString() string {
+	str, _ := json.Marshal(e)
+	return string(str)
 }
