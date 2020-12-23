@@ -33,7 +33,7 @@ func (api *ApiHandler) FillDailyEMA(w http.ResponseWriter, r *http.Request) (int
 		return status, errors.New("error calling FUNC_EMA, " + err.Error())
 	}
 
-	var ema8Resp []*alphavantage.RawDataEntity
+	var ema8Resp []*RawDataEntity
 	if restutils.Is2xxStatusCode(status) {
 		ema8Resp, err = ReadCsvData(req.Symbol, body, EMA_8_Reader)
 		if err != nil {

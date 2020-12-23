@@ -17,7 +17,7 @@ type DBClient struct {
 	Username string
 	Password string
 	Driver   string
-	Client   *gorp.DbMap
+	DB       *gorp.DbMap
 }
 
 func NewPostgresDBClient(host, dbName, user, pwd string) (*DBClient, error) {
@@ -28,7 +28,7 @@ func NewPostgresDBClient(host, dbName, user, pwd string) (*DBClient, error) {
 		Username: user,
 		Password: pwd,
 		Driver:   PostgresDriver,
-		Client:   nil,
+		DB:       nil,
 	}
 	err := c.SslDisabledConnect()
 	if err != nil {
@@ -49,16 +49,40 @@ func (c *DBClient) SslDisabledConnect() error {
 		return err
 	}
 
-	c.Client = &gorp.DbMap{Db: conn, Dialect: gorp.PostgresDialect{}}
+	c.DB = &gorp.DbMap{Db: conn, Dialect: gorp.PostgresDialect{}}
 	return nil
 }
 
 // create new table if not exist, pks is primary key, auto increment disabled
 func (c *DBClient) CreateTableIfNotExist(tableName string, v interface{}) error {
-	c.Client.AddTableWithName(v, tableName)
-	err := c.Client.CreateTablesIfNotExists()
+	c.DB.AddTableWithName(v, tableName)
+	err := c.DB.CreateTablesIfNotExists()
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (c *DBClient) Insert(v interface{}) error {
+	err := c.DB.Insert(v)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *DBClient) BulkInsert(v []interface{}, ignoreError bool) error {
+	trans, err := c.DB.Begin()
+	if err != nil {
+		return err
+	}
+
+	for _, data := range v {
+		err = trans.Insert(data)
+		if err != nil && !ignoreError{
+			return err
+		}
+	}
+
+	return trans.Commit()
 }

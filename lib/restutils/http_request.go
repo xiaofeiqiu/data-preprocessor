@@ -3,7 +3,6 @@ package restutils
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/log"
 	"io/ioutil"
 	"net/http"
@@ -18,7 +17,7 @@ type HttpClient struct {
 func (hc *HttpClient) doRequest(method string, url string, extraHeaders map[string]string, body []byte) (int, []byte, error) {
 	req, err := http.NewRequest(method, url, bytes.NewReader(body))
 	if err != nil {
-		log.Error("GetRequest", fmt.Sprintf("Error creating new request: %v", err))
+		log.Error("GetRequest", err, "error creating new request")
 		return 0, nil, err
 	}
 
@@ -32,14 +31,14 @@ func (hc *HttpClient) doRequest(method string, url string, extraHeaders map[stri
 
 	res, err := hc.Client.Do(req)
 	if err != nil {
-		log.Error("GetRequest", fmt.Sprintf("Error executing the reqeust: %v", err))
+		log.Error("GetRequest", err, "error executing the reqeust")
 		return 0, nil, err
 	}
 	defer res.Body.Close()
 
 	resBodyBytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		log.Error("GetRequest", fmt.Sprintf("Error reading the response body: %v", err))
+		log.Error("GetRequest", err, "error reading the response body")
 		return 0, nil, err
 	}
 

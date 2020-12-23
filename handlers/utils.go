@@ -4,16 +4,15 @@ import (
 	"bytes"
 	"encoding/csv"
 	"errors"
-	"github.com/xiaofeiqiu/data-preprocessor/services/alphavantage"
 	"math"
 	"strconv"
 )
 
-type DataReader func(symbol string, line []string) (*alphavantage.RawDataEntity, error)
+type DataReader func(symbol string, line []string) (*RawDataEntity, error)
 
-func ReadCsvData(symbol string, data []byte, reader DataReader) ([]*alphavantage.RawDataEntity, error) {
+func ReadCsvData(symbol string, data []byte, reader DataReader) ([]*RawDataEntity, error) {
 
-	var resps []*alphavantage.RawDataEntity
+	var resps []*RawDataEntity
 
 	r := csv.NewReader(bytes.NewReader(data))
 	lines, err := r.ReadAll()
@@ -41,9 +40,9 @@ func ReadCsvData(symbol string, data []byte, reader DataReader) ([]*alphavantage
 	return resps, nil
 }
 
-func CandleReader(symbol string, line []string) (*alphavantage.RawDataEntity, error) {
-	resp := &alphavantage.RawDataEntity{}
-	resp.Timestamp = line[0]
+func CandleReader(symbol string, line []string) (*RawDataEntity, error) {
+	resp := &RawDataEntity{}
+	resp.Date = line[0]
 	resp.Symbol = symbol
 
 	var err error
@@ -87,10 +86,10 @@ func CandleReader(symbol string, line []string) (*alphavantage.RawDataEntity, er
 	return resp, nil
 }
 
-func EMA_8_Reader(symbol string, line []string) (*alphavantage.RawDataEntity, error) {
+func EMA_8_Reader(symbol string, line []string) (*RawDataEntity, error) {
 	var err error
-	resp := &alphavantage.RawDataEntity{}
-	resp.Timestamp = line[0]
+	resp := &RawDataEntity{}
+	resp.Date = line[0]
 	resp.Symbol = symbol
 	tmp, err := strconv.ParseFloat(line[1], 32)
 	resp.EMA_8 = &tmp
@@ -100,8 +99,16 @@ func EMA_8_Reader(symbol string, line []string) (*alphavantage.RawDataEntity, er
 	return resp, nil
 }
 
-func SetChanges(dailyResps []*alphavantage.RawDataEntity) {
+func SetChanges(dailyResps []*RawDataEntity) {
 	for _, resp := range dailyResps {
 		SetChange(resp)
 	}
+}
+
+func ToInterfaceArray(data []*RawDataEntity) []interface{} {
+	result := make([]interface{}, len(data))
+	for i, s := range data {
+		result[i] = s
+	}
+	return result
 }

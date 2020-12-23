@@ -16,7 +16,7 @@ func ErrorHandler(f func(http.ResponseWriter, *http.Request) (int, error)) http.
 				Event: runtime.FuncForPC(reflect.ValueOf(f).Pointer()).Name(),
 				Error: err.Error(),
 			}
-			log.Error(res.Event, res.Error)
+			log.Error(res.Event, err, "")
 			restutils.ResponseWithJson(w, status, res)
 		}
 	}

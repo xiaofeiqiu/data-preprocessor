@@ -17,7 +17,7 @@ func (api *ApiHandler) InsertDailyCandle(w http.ResponseWriter, r *http.Request)
 
 	req.Function = alphavantage.FUNC_TIME_SERIES_DAILY_ADJUSTED
 	req.DataType = alphavantage.CSV
-	if req.OutputSize == ""{
+	if req.OutputSize == "" {
 		req.OutputSize = alphavantage.Compact
 	}
 
@@ -31,18 +31,20 @@ func (api *ApiHandler) InsertDailyCandle(w http.ResponseWriter, r *http.Request)
 		return status, errors.New("error calling FUNC_TIME_SERIES_DAILY_ADJUSTED, " + err.Error())
 	}
 
-	resp := []*alphavantage.RawDataEntity{}
+	resp := []*RawDataEntity{}
 	if restutils.Is2xxStatusCode(status) {
 		resp, err = ReadCsvData(req.Symbol, body, CandleReader)
 		if err != nil {
 			return 500, errors.New("error reading response, " + err.Error())
 		}
 		SetChanges(resp)
-		// todo: insert to db
+		err = api.DBClient.BulkInsert(ToInterfaceArray(resp), true)
+		if err != nil {
+			return 500, err
+		}
 		restutils.ResponseWithJson(w, 200, resp)
 		return 0, nil
 	}
 
 	return 500, errors.New("unexpected error occurred")
 }
-

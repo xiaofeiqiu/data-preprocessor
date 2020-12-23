@@ -125,8 +125,8 @@ func Info(event string, details string) {
 	jsonLogger.WithField("event", event).Info(details)
 }
 
-func Error(event string, details string) {
-	jsonLogger.WithField("event", event).Error(details)
+func Error(event string, err error, details string) {
+	jsonLogger.WithField("event", event).Error(fmt.Sprintf("%s, %s", details, err.Error()))
 }
 
 func Fatal(event string, details string) {

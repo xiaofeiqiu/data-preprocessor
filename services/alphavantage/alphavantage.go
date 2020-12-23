@@ -39,19 +39,6 @@ type DailyRequest struct {
 	SeriesType string `schema:"series_type" url:"series_type"`
 }
 
-type RawDataEntity struct {
-	Symbol        string   `json:"symbol" db:"symbol, primarykey"`
-	Timestamp     string   `json:"timestamp" db:"timestamp, primarykey"`
-	Open          float64  `json:"open" db:"open"`
-	High          float64  `json:"high" db:"high"`
-	Low           float64  `json:"low" db:"low"`
-	Close         float64  `json:"close" db:"close"`
-	AdjustedClose float64  `json:"adjusted_close" db:"adjusted_close"`
-	Volume        int64    `json:"volume" db:"volume"`
-	Change        float64  `json:"change" db:"change"`
-	EMA_8         *float64 `json:"ema_8,omitempty" db:"ema_8"`
-}
-
 func (api *AlphaVantageClient) Call(req DailyRequest) (int, []byte, error) {
 
 	url, err := api.GetUrl(req)

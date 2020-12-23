@@ -55,6 +55,8 @@ func main() {
 		DBClient:           dbClient,
 	}
 
+	apiHandler.InitDBTableMapping()
+
 	//err = apiHandler.DBClient.CreateTableIfNotExist("daily_raw_data", alphavantage.RawDataEntity{})
 	//if err != nil {
 	//	log.Fatal("error", err.Error())
