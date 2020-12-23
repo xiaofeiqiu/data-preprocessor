@@ -9,6 +9,8 @@ import (
 	"net/http"
 )
 
+var validPeriod = []string{"8", "30"}
+
 func (api *ApiHandler) FillDailyEMA(w http.ResponseWriter, r *http.Request) (int, error) {
 
 	req, err := NewEmaRequest(r)
@@ -54,5 +56,20 @@ func NewEmaRequest(r *http.Request) (alphavantage.DailyRequest, error) {
 	if req.OutputSize == "" {
 		req.OutputSize = alphavantage.Compact
 	}
+
+	isValid := validatePeriod(req.TimePeriod)
+	if !isValid{
+		return alphavantage.DailyRequest{}, errors.New("invalid period value")
+	}
+
 	return req, nil
+}
+
+func validatePeriod(period string) bool {
+	for _, v := range validPeriod {
+		if period == v {
+			return true
+		}
+	}
+	return false
 }
