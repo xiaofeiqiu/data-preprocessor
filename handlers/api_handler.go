@@ -31,9 +31,13 @@ type ApiHandler struct {
 	DBClient           *db.DBClient
 }
 
-func (api *ApiHandler) InitDBTableMapping() {
+func (api *ApiHandler) InitDBTableMapping() error {
 	api.DBClient.DB.AddTableWithName(RawDataEntity{}, dailyRawData)
-	api.DBClient.DB.CreateTablesIfNotExists()
+	err := api.DBClient.DB.CreateTablesIfNotExists()
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (e *RawDataEntity) ToString() string {

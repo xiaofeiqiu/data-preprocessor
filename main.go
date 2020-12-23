@@ -37,6 +37,8 @@ func main() {
 		log.Fatal("GetAppConfig", "error getting app config")
 	}
 
+	log.Info("Init", "Get app config successful")
+
 	alphaVantageApi := &alphavantage.AlphaVantageClient{
 		Host:   AlphavantageHost,
 		ApiKey: config.AlphaVantageKey,
@@ -49,17 +51,22 @@ func main() {
 	if err != nil {
 		log.Fatal("NewPostgresDBClient", "error connecting to db, "+err.Error())
 	}
+	log.Info("Init", "Create db client successful")
 
 	apiHandler := handlers.ApiHandler{
 		AlphaVantageClient: alphaVantageApi,
 		DBClient:           dbClient,
 	}
 
-	apiHandler.InitDBTableMapping()
+	err = apiHandler.InitDBTableMapping()
+	if err != nil {
+		log.Fatal("Init", "error init db table mapping")
+	}
 
 	r.Get("/preprocessor/health", restutils.Health)
 	r.Post("/preprocessor/candle/dailyadjusted", handlers.ErrorHandler(apiHandler.InsertDailyCandle))
 	r.Post("/preprocessor/candle/missingdailyadjusted", handlers.ErrorHandler(apiHandler.InsertMissingDailyCandle))
 	r.Put("/preprocessor/ema8/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyEMA))
 	http.ListenAndServe(":8080", r)
+	log.Info("Init","Server started")
 }
