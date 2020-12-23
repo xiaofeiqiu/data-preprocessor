@@ -3,6 +3,8 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
+	"github.com/xiaofeiqiu/data-preprocessor/lib/log"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/restutils"
 	"github.com/xiaofeiqiu/data-preprocessor/services/alphavantage"
 	"io/ioutil"
@@ -27,13 +29,13 @@ func (api *ApiHandler) FillDailyEMA(w http.ResponseWriter, r *http.Request) (int
 		return status, errors.New("error calling FUNC_EMA, " + err.Error())
 	}
 
-	var ema8Resp []*RawDataEntity
+	var emaResp []*RawDataEntity
 	if restutils.Is2xxStatusCode(status) {
-		ema8Resp, err = ReadCsvData(req.Symbol, body, EMA_8_Reader)
+		emaResp, err = ReadCsvData(req.Symbol, body, EMA_Reader)
 		if err != nil {
 			return 500, errors.New("error reading response, " + err.Error())
 		}
-		restutils.ResponseWithJson(w, 200, ema8Resp)
+		restutils.ResponseWithJson(w, 200, emaResp)
 		return 0, nil
 	}
 
@@ -58,8 +60,10 @@ func NewEmaRequest(r *http.Request) (alphavantage.DailyRequest, error) {
 	}
 
 	isValid := validatePeriod(req.TimePeriod)
-	if !isValid{
-		return alphavantage.DailyRequest{}, errors.New("invalid period value")
+	if !isValid {
+		err = fmt.Errorf("invalid period value")
+		log.Error("NewEmaRequest", err, "")
+		return alphavantage.DailyRequest{}, err
 	}
 
 	return req, nil

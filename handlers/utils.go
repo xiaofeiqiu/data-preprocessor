@@ -95,7 +95,7 @@ func CandleReader(symbol string, line []string) (*RawDataEntity, error) {
 	return resp, nil
 }
 
-func EMA_8_Reader(symbol string, line []string) (*RawDataEntity, error) {
+func EMA_Reader(symbol string, line []string) (*RawDataEntity, error) {
 	var err error
 	resp := &RawDataEntity{}
 	resp.Date, err = time.Parse("2006-01-02", line[0])
