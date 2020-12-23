@@ -3,6 +3,7 @@ package alphavantage
 import (
 	"errors"
 	"github.com/google/go-querystring/query"
+	"github.com/xiaofeiqiu/data-preprocessor/lib/log"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/restutils"
 )
 
@@ -35,7 +36,7 @@ type DailyRequest struct {
 	Function   string `validate:"required" url:"function"`
 	DataType   string `validate:"required" url:"datatype"`
 	Interval   string `schema:"interval" url:"interval"`
-	TimePeriod string `schema:"time_period" url:"time_period"`
+	TimePeriod string `schema:"time_period" url:"time_period" json:"time_period"`
 	SeriesType string `schema:"series_type" url:"series_type"`
 }
 
@@ -58,6 +59,8 @@ func (h *AlphaVantageClient) GetUrl(req DailyRequest) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	url := h.Host + Path + "?" + params.Encode() + "&apikey=" + h.ApiKey
+	url := h.Host + Path + "?" + params.Encode()
+	log.Info("GetURL",url)
+	url = url + "&apikey=" + h.ApiKey
 	return url, nil
 }

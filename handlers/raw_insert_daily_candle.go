@@ -48,7 +48,7 @@ func (api *ApiHandler) InsertDailyCandle(w http.ResponseWriter, r *http.Request)
 		if err != nil {
 			return 500, err
 		}
-		restutils.ResponseWithJson(w, 200, resp)
+		restutils.ResponseWithJson(w, 200, "Insert successful")
 		return 0, nil
 	}
 
@@ -94,7 +94,7 @@ func (api *ApiHandler) InsertMissingDailyCandle(w http.ResponseWriter, r *http.R
 		}
 		SetChanges(resp)
 		api.insertMissing(resp)
-		restutils.ResponseWithJson(w, 200, resp)
+		restutils.ResponseWithJson(w, 200, "Insert missing successful")
 		return 0, nil
 	}
 

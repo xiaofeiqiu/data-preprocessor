@@ -10,18 +10,10 @@ import (
 )
 
 func (api *ApiHandler) FillDailyEMA(w http.ResponseWriter, r *http.Request) (int, error) {
-	req := alphavantage.DailyRequest{}
-	body, err := ioutil.ReadAll(r.Body)
-	json.Unmarshal(body, &req)
 
-	req.Function = alphavantage.FUNC_EMA
-	req.DataType = alphavantage.CSV
-	req.SeriesType = alphavantage.SeriesTypeClose
-	req.Interval = alphavantage.IntervalDaily
-	req.TimePeriod = alphavantage.TimePeriod8
-
-	if req.OutputSize == ""{
-		req.OutputSize = alphavantage.Compact
+	req, err := NewEmaRequest(r)
+	if err != nil {
+		return 400, errors.New("error creating new ema request")
 	}
 
 	err = validate.Struct(req)
@@ -39,10 +31,28 @@ func (api *ApiHandler) FillDailyEMA(w http.ResponseWriter, r *http.Request) (int
 		if err != nil {
 			return 500, errors.New("error reading response, " + err.Error())
 		}
-
 		restutils.ResponseWithJson(w, 200, ema8Resp)
 		return 0, nil
 	}
 
 	return 500, errors.New("unexpected error occurred")
+}
+
+func NewEmaRequest(r *http.Request) (alphavantage.DailyRequest, error) {
+	req := alphavantage.DailyRequest{}
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return alphavantage.DailyRequest{}, err
+	}
+	json.Unmarshal(body, &req)
+
+	req.Function = alphavantage.FUNC_EMA
+	req.DataType = alphavantage.CSV
+	req.SeriesType = alphavantage.SeriesTypeClose
+	req.Interval = alphavantage.IntervalDaily
+
+	if req.OutputSize == "" {
+		req.OutputSize = alphavantage.Compact
+	}
+	return req, nil
 }
