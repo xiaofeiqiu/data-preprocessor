@@ -4,18 +4,21 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/xiaofeiqiu/data-preprocessor/handlers"
+	"github.com/xiaofeiqiu/data-preprocessor/lib/db"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/log"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/restutils"
 	"github.com/xiaofeiqiu/data-preprocessor/services/alphavantage"
+	"github.com/xiaofeiqiu/data-preprocessor/internal"
 	"net/http"
-	"os"
 	"time"
 )
 
 const (
-	Timeout    = 60
-	Throttle   = 10
-	AlphaVantageKey = "ALPHA_VANTAGE"
+	Timeout          = 60
+	Throttle         = 10
+	AlphavantageHost = "https://www.alphavantage.co"
+	DBName           = "golddigger"
+	DBHost           = "localhost"
 )
 
 func main() {
@@ -29,22 +32,33 @@ func main() {
 	r.Use(middleware.Timeout(Timeout * time.Second))
 	r.Use(middleware.Throttle(Throttle))
 
-	apiKey := os.Getenv(AlphaVantageKey)
-	if apiKey == "" {
-		log.Fatal("GetApiKey","Api key not found")
+	config, err := internal.GetAppConfig()
+	if err != nil {
+		log.Fatal("GetAppConfig", "error getting app config")
 	}
 
-	alphaVantageApi := &alphavantage.AlphaVantageApi{
-		Host:   "https://www.alphavantage.co",
-		ApiKey: apiKey,
+	alphaVantageApi := &alphavantage.AlphaVantageClient{
+		Host:   AlphavantageHost,
+		ApiKey: config.AlphaVantageKey,
 		HttpClient: &restutils.HttpClient{
 			Client: &http.Client{},
 		},
 	}
 
-	apiHandler := handlers.ApiHandler{
-		AlphaVantageApi: alphaVantageApi,
+	dbClient, err := db.NewPostgresDBClient(DBHost, DBName, config.DBUsername, config.DBPassword)
+	if err != nil {
+		log.Fatal("NewPostgresDBClient", "error connecting to db, "+err.Error())
 	}
+
+	apiHandler := handlers.ApiHandler{
+		AlphaVantageClient: alphaVantageApi,
+		DBClient:           dbClient,
+	}
+
+	//err = apiHandler.DBClient.CreateTableIfNotExist("daily_raw_data", alphavantage.RawDataEntity{})
+	//if err != nil {
+	//	log.Fatal("error", err.Error())
+	//}
 
 	r.Get("/preprocessor/health", restutils.Health)
 	r.Post("/preprocessor/candle/dailyadjusted", handlers.ErrorHandler(apiHandler.InsertDailyCandle))

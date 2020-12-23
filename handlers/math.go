@@ -5,7 +5,7 @@ import (
 	"math"
 )
 
-func SetChange(input *alphavantage.DailyResponse) {
+func SetChange(input *alphavantage.RawDataEntity) {
 	tmp := (input.Close - input.Open) * 100 / input.Open
 	input.Change = math.Round(tmp*100) / 100
 }

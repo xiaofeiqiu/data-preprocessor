@@ -9,11 +9,11 @@ import (
 	"strconv"
 )
 
-type DataReader func(symbol string, line []string) (*alphavantage.DailyResponse, error)
+type DataReader func(symbol string, line []string) (*alphavantage.RawDataEntity, error)
 
-func ReadCsvData(symbol string, data []byte, reader DataReader) ([]*alphavantage.DailyResponse, error) {
+func ReadCsvData(symbol string, data []byte, reader DataReader) ([]*alphavantage.RawDataEntity, error) {
 
-	var resps []*alphavantage.DailyResponse
+	var resps []*alphavantage.RawDataEntity
 
 	r := csv.NewReader(bytes.NewReader(data))
 	lines, err := r.ReadAll()
@@ -41,8 +41,8 @@ func ReadCsvData(symbol string, data []byte, reader DataReader) ([]*alphavantage
 	return resps, nil
 }
 
-func CandleReader(symbol string, line []string) (*alphavantage.DailyResponse, error) {
-	resp := &alphavantage.DailyResponse{}
+func CandleReader(symbol string, line []string) (*alphavantage.RawDataEntity, error) {
+	resp := &alphavantage.RawDataEntity{}
 	resp.Timestamp = line[0]
 	resp.Symbol = symbol
 
@@ -87,9 +87,9 @@ func CandleReader(symbol string, line []string) (*alphavantage.DailyResponse, er
 	return resp, nil
 }
 
-func EMA_8_Reader(symbol string, line []string) (*alphavantage.DailyResponse, error) {
+func EMA_8_Reader(symbol string, line []string) (*alphavantage.RawDataEntity, error) {
 	var err error
-	resp := &alphavantage.DailyResponse{}
+	resp := &alphavantage.RawDataEntity{}
 	resp.Timestamp = line[0]
 	resp.Symbol = symbol
 	tmp, err := strconv.ParseFloat(line[1], 32)
@@ -100,7 +100,7 @@ func EMA_8_Reader(symbol string, line []string) (*alphavantage.DailyResponse, er
 	return resp, nil
 }
 
-func SetChanges(dailyResps []*alphavantage.DailyResponse) {
+func SetChanges(dailyResps []*alphavantage.RawDataEntity) {
 	for _, resp := range dailyResps {
 		SetChange(resp)
 	}

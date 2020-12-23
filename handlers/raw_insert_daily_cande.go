@@ -26,12 +26,12 @@ func (api *ApiHandler) InsertDailyCandle(w http.ResponseWriter, r *http.Request)
 		return 400, errors.New("request validation failed, " + err.Error())
 	}
 
-	status, body, err := api.AlphaVantageApi.Call(req)
+	status, body, err := api.AlphaVantageClient.Call(req)
 	if err != nil {
 		return status, errors.New("error calling FUNC_TIME_SERIES_DAILY_ADJUSTED, " + err.Error())
 	}
 
-	resp := []*alphavantage.DailyResponse{}
+	resp := []*alphavantage.RawDataEntity{}
 	if restutils.Is2xxStatusCode(status) {
 		resp, err = ReadCsvData(req.Symbol, body, CandleReader)
 		if err != nil {

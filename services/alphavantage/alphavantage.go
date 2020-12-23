@@ -23,7 +23,7 @@ const SeriesTypeClose = "close"
 const FUNC_EMA = "EMA"
 const FUNC_TIME_SERIES_DAILY_ADJUSTED = "TIME_SERIES_DAILY_ADJUSTED"
 
-type AlphaVantageApi struct {
+type AlphaVantageClient struct {
 	Host       string
 	ApiKey     string
 	HttpClient *restutils.HttpClient
@@ -39,20 +39,20 @@ type DailyRequest struct {
 	SeriesType string `schema:"series_type" url:"series_type"`
 }
 
-type DailyResponse struct {
-	Symbol        string   `json:"symbol"`
-	Timestamp     string   `json:"timestamp"`
-	Open          float64  `json:"open"`
-	High          float64  `json:"high"`
-	Low           float64  `json:"low"`
-	Close         float64  `json:"close"`
-	AdjustedClose float64  `json:"adjusted_close"`
-	Volume        int64    `json:"volume"`
-	Change        float64  `json:"change"`
-	EMA_8         *float64 `json:"ema_8,omitempty"`
+type RawDataEntity struct {
+	Symbol        string   `json:"symbol" db:"symbol, primarykey"`
+	Timestamp     string   `json:"timestamp" db:"timestamp, primarykey"`
+	Open          float64  `json:"open" db:"open"`
+	High          float64  `json:"high" db:"high"`
+	Low           float64  `json:"low" db:"low"`
+	Close         float64  `json:"close" db:"close"`
+	AdjustedClose float64  `json:"adjusted_close" db:"adjusted_close"`
+	Volume        int64    `json:"volume" db:"volume"`
+	Change        float64  `json:"change" db:"change"`
+	EMA_8         *float64 `json:"ema_8,omitempty" db:"ema_8"`
 }
 
-func (api *AlphaVantageApi) Call(req DailyRequest) (int, []byte, error) {
+func (api *AlphaVantageClient) Call(req DailyRequest) (int, []byte, error) {
 
 	url, err := api.GetUrl(req)
 	if err != nil {
@@ -66,7 +66,7 @@ func (api *AlphaVantageApi) Call(req DailyRequest) (int, []byte, error) {
 	return status, body, nil
 }
 
-func (h *AlphaVantageApi) GetUrl(req DailyRequest) (string, error) {
+func (h *AlphaVantageClient) GetUrl(req DailyRequest) (string, error) {
 	params, err := query.Values(req)
 	if err != nil {
 		return "", err

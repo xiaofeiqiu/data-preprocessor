@@ -28,12 +28,12 @@ func (api *ApiHandler) FillDailyEMA(w http.ResponseWriter, r *http.Request) (int
 	if err != nil {
 		return 400, errors.New("request validation failed, " + err.Error())
 	}
-	status, body, err := api.AlphaVantageApi.Call(req)
+	status, body, err := api.AlphaVantageClient.Call(req)
 	if err != nil {
 		return status, errors.New("error calling FUNC_EMA, " + err.Error())
 	}
 
-	var ema8Resp []*alphavantage.DailyResponse
+	var ema8Resp []*alphavantage.RawDataEntity
 	if restutils.Is2xxStatusCode(status) {
 		ema8Resp, err = ReadCsvData(req.Symbol, body, EMA_8_Reader)
 		if err != nil {
