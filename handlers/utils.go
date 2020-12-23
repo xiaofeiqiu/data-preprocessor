@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/csv"
 	"errors"
+	"github.com/xiaofeiqiu/data-preprocessor/lib/log"
 	"math"
 	"strconv"
 	"time"
@@ -13,6 +14,7 @@ type DataReader func(symbol string, line []string) (*RawDataEntity, error)
 
 func ReadCsvData(symbol string, data []byte, reader DataReader) ([]*RawDataEntity, error) {
 
+	log.Info("ReadCsvData","Reading csv data")
 	var resps []*RawDataEntity
 
 	r := csv.NewReader(bytes.NewReader(data))
@@ -37,6 +39,8 @@ func ReadCsvData(symbol string, data []byte, reader DataReader) ([]*RawDataEntit
 	if theError != nil {
 		return nil, errors.New("error reading values, " + err.Error())
 	}
+
+	log.Info("ReadCsvData","Reading csv data successful")
 
 	return resps, nil
 }
@@ -111,6 +115,7 @@ func SetChanges(dailyResps []*RawDataEntity) {
 	for _, resp := range dailyResps {
 		SetChange(resp)
 	}
+	log.Info("SetChanges","SetChanges successful")
 }
 
 func ToInterfaceArray(data []*RawDataEntity) []interface{} {

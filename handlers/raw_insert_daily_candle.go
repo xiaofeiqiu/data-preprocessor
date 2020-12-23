@@ -108,10 +108,16 @@ func (api *ApiHandler) InsertMissingDailyCandle(w http.ResponseWriter, r *http.R
 }
 
 func (api *ApiHandler) insertMissing(data []*RawDataEntity) {
+
+	log.Info("insertMissing", "Inserting missing daily raw data")
+
+	count := 0
 	for _, v := range data {
 		err := api.DBClient.Insert(v)
 		if err == nil {
-			log.Info("insertMissing", v.ToString())
+			count++
 		}
 	}
+
+	log.Info("insertMissing", "Inserted " + strconv.Itoa(count))
 }
