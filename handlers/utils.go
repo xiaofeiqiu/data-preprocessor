@@ -15,7 +15,7 @@ type DataReader func(symbol string, line []string) (*dbservice.RawDataEntity, er
 
 func ReadCsvData(symbol string, data []byte, reader DataReader) ([]*dbservice.RawDataEntity, error) {
 
-	log.Info("ReadCsvData","Reading csv data")
+	log.Info("ReadCsvData", "Reading csv data")
 	var resps []*dbservice.RawDataEntity
 
 	r := csv.NewReader(bytes.NewReader(data))
@@ -41,7 +41,7 @@ func ReadCsvData(symbol string, data []byte, reader DataReader) ([]*dbservice.Ra
 		return nil, errors.New("error reading values, " + err.Error())
 	}
 
-	log.Info("ReadCsvData","Reading csv data successful")
+	log.Info("ReadCsvData", "Reading csv data successful")
 
 	return resps, nil
 }
@@ -105,6 +105,7 @@ func EMA_Reader(symbol string, line []string) (*dbservice.RawDataEntity, error) 
 	}
 	resp.Symbol = symbol
 	tmp, err := strconv.ParseFloat(line[1], 32)
+	tmp = math.Round(tmp*100) / 100
 	resp.EMA_8 = &tmp
 	if err != nil {
 		return nil, err
@@ -116,13 +117,14 @@ func SetChanges(dailyResps []*dbservice.RawDataEntity) {
 	for _, resp := range dailyResps {
 		SetChange(resp)
 	}
-	log.Info("SetChanges","SetChanges successful")
+	log.Info("SetChanges", "SetChanges successful")
 }
 
-func ToInterfaceArray(data []*dbservice.RawDataEntity) []interface{} {
-	result := make([]interface{}, len(data))
-	for i, s := range data {
-		result[i] = s
+func ToMap(data []*dbservice.RawDataEntity) map[string]*dbservice.RawDataEntity {
+	result := map[string]*dbservice.RawDataEntity{}
+
+	for _, v := range data {
+		result[v.Date.Format(time.RFC3339)] = v
 	}
 	return result
 }
