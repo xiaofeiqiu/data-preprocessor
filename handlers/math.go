@@ -2,9 +2,10 @@ package handlers
 
 import (
 	"math"
+	"github.com/xiaofeiqiu/data-preprocessor/services/dbservice"
 )
 
-func SetChange(input *RawDataEntity) {
+func SetChange(input *dbservice.RawDataEntity) {
 	tmp := (input.Close - input.Open) * 100 / input.Open
 	input.Change = math.Round(tmp*100) / 100
 }

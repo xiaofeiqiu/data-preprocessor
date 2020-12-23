@@ -6,6 +6,7 @@ import (
 	"github.com/xiaofeiqiu/data-preprocessor/lib/log"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/restutils"
 	"github.com/xiaofeiqiu/data-preprocessor/services/alphavantage"
+	"github.com/xiaofeiqiu/data-preprocessor/services/dbservice"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -15,6 +16,9 @@ func (api *ApiHandler) InsertDailyCandle(w http.ResponseWriter, r *http.Request)
 
 	req := alphavantage.DailyRequest{}
 	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return 400, errors.New("error reading request body, " + err.Error())
+	}
 	json.Unmarshal(body, &req)
 
 	req.Function = alphavantage.FUNC_TIME_SERIES_DAILY_ADJUSTED
@@ -35,8 +39,7 @@ func (api *ApiHandler) InsertDailyCandle(w http.ResponseWriter, r *http.Request)
 	}
 	log.Info("InsertDailyCandle", "Call alpha vantage successful")
 
-
-	resp := []*RawDataEntity{}
+	resp := []*dbservice.RawDataEntity{}
 	if restutils.Is2xxStatusCode(status) {
 		log.Info("InsertDailyCandle", "Alpha vantage returns 200 status code")
 		resp, err = ReadCsvData(req.Symbol, body, CandleReader)
@@ -85,7 +88,7 @@ func (api *ApiHandler) InsertMissingDailyCandle(w http.ResponseWriter, r *http.R
 	}
 	log.Info("InsertMissingDailyCandle", "Call alpha vantage successful")
 
-	resp := []*RawDataEntity{}
+	resp := []*dbservice.RawDataEntity{}
 	if restutils.Is2xxStatusCode(status) {
 		log.Info("InsertMissingDailyCandle", "Alpha vantage returns 200 status code")
 		resp, err = ReadCsvData(req.Symbol, body, CandleReader)
@@ -107,7 +110,7 @@ func (api *ApiHandler) InsertMissingDailyCandle(w http.ResponseWriter, r *http.R
 	return 500, errors.New("unexpected error occurred")
 }
 
-func (api *ApiHandler) insertMissing(data []*RawDataEntity) {
+func (api *ApiHandler) insertMissing(data []*dbservice.RawDataEntity) {
 
 	log.Info("insertMissing", "Inserting missing daily raw data")
 
@@ -119,5 +122,5 @@ func (api *ApiHandler) insertMissing(data []*RawDataEntity) {
 		}
 	}
 
-	log.Info("insertMissing", "Inserted " + strconv.Itoa(count))
+	log.Info("insertMissing", "Inserted "+strconv.Itoa(count))
 }

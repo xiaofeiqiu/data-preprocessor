@@ -5,17 +5,18 @@ import (
 	"encoding/csv"
 	"errors"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/log"
+	"github.com/xiaofeiqiu/data-preprocessor/services/dbservice"
 	"math"
 	"strconv"
 	"time"
 )
 
-type DataReader func(symbol string, line []string) (*RawDataEntity, error)
+type DataReader func(symbol string, line []string) (*dbservice.RawDataEntity, error)
 
-func ReadCsvData(symbol string, data []byte, reader DataReader) ([]*RawDataEntity, error) {
+func ReadCsvData(symbol string, data []byte, reader DataReader) ([]*dbservice.RawDataEntity, error) {
 
 	log.Info("ReadCsvData","Reading csv data")
-	var resps []*RawDataEntity
+	var resps []*dbservice.RawDataEntity
 
 	r := csv.NewReader(bytes.NewReader(data))
 	lines, err := r.ReadAll()
@@ -45,11 +46,11 @@ func ReadCsvData(symbol string, data []byte, reader DataReader) ([]*RawDataEntit
 	return resps, nil
 }
 
-func CandleReader(symbol string, line []string) (*RawDataEntity, error) {
+func CandleReader(symbol string, line []string) (*dbservice.RawDataEntity, error) {
 	var err error
 	var theError error
 
-	resp := &RawDataEntity{}
+	resp := &dbservice.RawDataEntity{}
 	resp.Date, err = time.Parse("2006-01-02", line[0])
 	if err != nil {
 		theError = err
@@ -95,9 +96,9 @@ func CandleReader(symbol string, line []string) (*RawDataEntity, error) {
 	return resp, nil
 }
 
-func EMA_Reader(symbol string, line []string) (*RawDataEntity, error) {
+func EMA_Reader(symbol string, line []string) (*dbservice.RawDataEntity, error) {
 	var err error
-	resp := &RawDataEntity{}
+	resp := &dbservice.RawDataEntity{}
 	resp.Date, err = time.Parse("2006-01-02", line[0])
 	if err != nil {
 		return nil, err
@@ -111,14 +112,14 @@ func EMA_Reader(symbol string, line []string) (*RawDataEntity, error) {
 	return resp, nil
 }
 
-func SetChanges(dailyResps []*RawDataEntity) {
+func SetChanges(dailyResps []*dbservice.RawDataEntity) {
 	for _, resp := range dailyResps {
 		SetChange(resp)
 	}
 	log.Info("SetChanges","SetChanges successful")
 }
 
-func ToInterfaceArray(data []*RawDataEntity) []interface{} {
+func ToInterfaceArray(data []*dbservice.RawDataEntity) []interface{} {
 	result := make([]interface{}, len(data))
 	for i, s := range data {
 		result[i] = s

@@ -9,6 +9,7 @@ import (
 	"github.com/xiaofeiqiu/data-preprocessor/services/alphavantage"
 	"io/ioutil"
 	"net/http"
+	"github.com/xiaofeiqiu/data-preprocessor/services/dbservice"
 )
 
 var validPeriod = []string{"8", "30"}
@@ -17,7 +18,7 @@ func (api *ApiHandler) FillDailyEMA(w http.ResponseWriter, r *http.Request) (int
 
 	req, err := NewEmaRequest(r)
 	if err != nil {
-		return 400, errors.New("error creating new ema request")
+		return 400, errors.New("error creating new ema request, " + err.Error())
 	}
 
 	err = validate.Struct(req)
@@ -29,7 +30,7 @@ func (api *ApiHandler) FillDailyEMA(w http.ResponseWriter, r *http.Request) (int
 		return status, errors.New("error calling FUNC_EMA, " + err.Error())
 	}
 
-	var emaResp []*RawDataEntity
+	var emaResp []*dbservice.RawDataEntity
 	if restutils.Is2xxStatusCode(status) {
 		emaResp, err = ReadCsvData(req.Symbol, body, EMA_Reader)
 		if err != nil {
