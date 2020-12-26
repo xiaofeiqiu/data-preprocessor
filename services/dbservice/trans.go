@@ -41,10 +41,10 @@ func (s *DBService) InsertRawDataEntityIgnoreError(data []*RawDataEntity) int {
 
 // daily raw data query
 var SelectFromDailyRawData = "select * from " + dailyRawData
-var WhereSymbolAndNilEma = "where symbol=$1 and ema%s is null"
+var WhereSymbolAndNilEma = "where symbol=$1 and %s is null"
 
-func (s *DBService) FindNullEma(data *[]RawDataEntity, symbol string, timePeriod string) error {
-	where := fmt.Sprintf(WhereSymbolAndNilEma, timePeriod)
+func (s *DBService) FindNullColEntries(data *[]RawDataEntity, symbol string, colName string) error {
+	where := fmt.Sprintf(WhereSymbolAndNilEma, colName)
 	query := fmt.Sprintf("%s %s", SelectFromDailyRawData, where)
 	_, err := s.client.DB.Select(data, query, symbol)
 	if err != nil {
@@ -85,7 +85,6 @@ func (s *DBService) DeleteBySymbol(table, symbol string) error {
 	}
 	return nil
 }
-
 
 func (s *DBService) ClearDailyRawDataTable() error {
 	var deleteAll = "delete from %s where symbol!=$1"

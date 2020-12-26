@@ -113,6 +113,23 @@ func EMA_Reader(symbol string, line []string) (*dbservice.RawDataEntity, error) 
 	return resp, nil
 }
 
+func CCI_Reader(symbol string, line []string) (*dbservice.RawDataEntity, error) {
+	var err error
+	resp := &dbservice.RawDataEntity{}
+	resp.Date, err = time.Parse("2006-01-02", line[0])
+	if err != nil {
+		return nil, err
+	}
+	resp.Symbol = symbol
+	tmp, err := strconv.ParseFloat(line[1], 32)
+	tmp = math.Round(tmp*100) / 100
+	resp.CCI = &tmp
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 func SetChanges(dailyResps []*dbservice.RawDataEntity) {
 	for _, resp := range dailyResps {
 		SetChange(resp)
@@ -127,4 +144,13 @@ func ToMap(data []*dbservice.RawDataEntity) map[string]*dbservice.RawDataEntity 
 		result[v.Date.Format(time.RFC3339)] = v
 	}
 	return result
+}
+
+func validatePeriod(period string) bool {
+	for _, v := range validEMAPeriod {
+		if period == v {
+			return true
+		}
+	}
+	return false
 }

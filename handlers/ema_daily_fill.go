@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-var validPeriod = []string{"20", "50", "100", "200"}
+var validEMAPeriod = []string{"20", "50", "100", "200"}
 
 func (api *ApiHandler) FillDailyEMA(w http.ResponseWriter, r *http.Request) (int, error) {
 
@@ -33,7 +33,7 @@ func (api *ApiHandler) FillDailyEMA(w http.ResponseWriter, r *http.Request) (int
 
 	// find nil ema entries
 	var entries []dbservice.RawDataEntity
-	api.DBService.FindNullEma(&entries, req.Symbol, req.TimePeriod)
+	api.DBService.FindNullColEntries(&entries, req.Symbol, "ema"+req.TimePeriod)
 	if len(entries) == 0 {
 		err = fmt.Errorf("0 nil ema found")
 		log.Error("FillDailyEMA", err, "")
@@ -97,15 +97,6 @@ func NewEmaRequest(r *http.Request) (alphavantage.DailyRequest, error) {
 	}
 
 	return req, nil
-}
-
-func validatePeriod(period string) bool {
-	for _, v := range validPeriod {
-		if period == v {
-			return true
-		}
-	}
-	return false
 }
 
 func SetEMA(entries []dbservice.RawDataEntity, emas []*dbservice.RawDataEntity, period string) int {

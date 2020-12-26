@@ -75,10 +75,9 @@ func main() {
 	r.Post("/preprocessor/processpr/doall", handlers.ErrorHandler(apiHandler.Doall))
 
 	r.Put("/preprocessor/ema/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyEMA))
+	r.Put("/preprocessor/cci/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyCCI))
 
 	r.Delete("/preprocessor/processpr/dailyrawdata", handlers.ErrorHandler(apiHandler.ClearRawData))
-
-
 
 	http.ListenAndServe(":8080", r)
 	log.Info("Init", "Server started")

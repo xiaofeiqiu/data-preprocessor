@@ -20,8 +20,12 @@ type RawDataEntity struct {
 	EMA_50          *float64  `json:"ema50,omitempty" db:"ema50"`
 	EMA_100         *float64  `json:"ema100,omitempty" db:"ema100"`
 	EMA_200         *float64  `json:"ema200,omitempty" db:"ema200"`
+	CCI             *float64  `json:"cci,omitempty" db:"-"`
 	CCI_100         *float64  `json:"cci100,omitempty" db:"cci100"`
+	AroonUp         *float64  `json:"aroonup,omitempty" db:"-"`
+	AroonDown       *float64  `json:"aroondown,omitempty" db:"-"`
 	AroonUp_50      *float64  `json:"aroonup_50,omitempty" db:"aroonup50"`
 	AroonDown_50    *float64  `json:"aroondown_50,omitempty" db:"aroondown50"`
+	Macd            *float64  `json:"macd,omitempty" db:"-"`
 	Macd_20_200_100 *float64  `json:"macd20_200_100,omitempty" db:"macd20200100"`
 }
