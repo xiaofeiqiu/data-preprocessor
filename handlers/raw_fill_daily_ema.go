@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"github.com/xiaofeiqiu/data-preprocessor/services/dbservice"
+	"strconv"
 	"time"
 )
 
@@ -56,8 +57,8 @@ func (api *ApiHandler) FillDailyEMA(w http.ResponseWriter, r *http.Request) (int
 		}
 		log.Info("FillDailyEMA", "Read ema csv successful")
 
-		SetEMA(entries, emaResp, req.TimePeriod)
-		log.Info("SetEMA", "Set ema successful")
+		ct := SetEMA(entries, emaResp, req.TimePeriod)
+		log.Info("SetEMA", "Set ema successful, count: "+strconv.Itoa(ct))
 
 		c, err := api.DBService.UpdateEntries(entries)
 		if err != nil {
