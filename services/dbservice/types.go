@@ -15,7 +15,11 @@ type RawDataEntity struct {
 	AdjustedClose float64   `json:"adjusted_close" db:"adjusted_close"`
 	Volume        int64     `json:"volume" db:"volume"`
 	Change        float64   `json:"change" db:"change"`
-	EMA_8         *float64  `json:"ema_8,omitempty" db:"ema_8"`
+	EMA           *float64  `json:"ema,omitempty" db:"-"`
+	EMA_20        *float64  `json:"ema20,omitempty" db:"ema20"`
+	EMA_50        *float64  `json:"ema50,omitempty" db:"ema50"`
+	EMA_100       *float64  `json:"ema100,omitempty" db:"ema100"`
+	EMA_200       *float64  `json:"ema200,omitempty" db:"ema200"`
 }
 
 func (e *RawDataEntity) ToString() string {

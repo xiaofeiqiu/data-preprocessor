@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-var validPeriod = []string{"8", "30"}
+var validPeriod = []string{"20", "50", "100", "200"}
 
 func (api *ApiHandler) FillDailyEMA(w http.ResponseWriter, r *http.Request) (int, error) {
 
@@ -107,14 +107,41 @@ func validatePeriod(period string) bool {
 	return false
 }
 
-func SetEMA(entries []dbservice.RawDataEntity, emas []*dbservice.RawDataEntity, period string) {
+func SetEMA(entries []dbservice.RawDataEntity, emas []*dbservice.RawDataEntity, period string) int {
 	tmpMap := ToMap(emas)
-	if period == "8" {
+	count := 0
+	if period == "20" {
 		for i, v := range entries {
 			key := v.Date.Format(time.RFC3339)
 			if tmpMap[key] != nil {
-				entries[i].EMA_8 = tmpMap[key].EMA_8
+				entries[i].EMA_20 = tmpMap[key].EMA
+				count++
+			}
+		}
+	} else if period == "50" {
+		for i, v := range entries {
+			key := v.Date.Format(time.RFC3339)
+			if tmpMap[key] != nil {
+				entries[i].EMA_50 = tmpMap[key].EMA
+				count++
+			}
+		}
+	} else if period == "100" {
+		for i, v := range entries {
+			key := v.Date.Format(time.RFC3339)
+			if tmpMap[key] != nil {
+				entries[i].EMA_100 = tmpMap[key].EMA
+				count++
+			}
+		}
+	} else if period == "200" {
+		for i, v := range entries {
+			key := v.Date.Format(time.RFC3339)
+			if tmpMap[key] != nil {
+				entries[i].EMA_200 = tmpMap[key].EMA
+				count++
 			}
 		}
 	}
+	return count
 }

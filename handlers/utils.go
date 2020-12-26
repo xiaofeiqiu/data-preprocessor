@@ -106,7 +106,7 @@ func EMA_Reader(symbol string, line []string) (*dbservice.RawDataEntity, error) 
 	resp.Symbol = symbol
 	tmp, err := strconv.ParseFloat(line[1], 32)
 	tmp = math.Round(tmp*100) / 100
-	resp.EMA_8 = &tmp
+	resp.EMA = &tmp
 	if err != nil {
 		return nil, err
 	}

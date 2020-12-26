@@ -41,7 +41,7 @@ func (s *DBService) InsertRawDataEntityIgnoreError(data []*RawDataEntity) int {
 
 // daily raw data query
 var SelectFromDailyRawData = "select * from " + dailyRawData
-var WhereSymbolAndNilEma = "where symbol=$1 and ema_%s is null"
+var WhereSymbolAndNilEma = "where symbol=$1 and ema%s is null"
 
 func (s *DBService) FindNullEma(data *[]RawDataEntity, symbol string, timePeriod string) error {
 	where := fmt.Sprintf(WhereSymbolAndNilEma, timePeriod)
