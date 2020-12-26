@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	Timeout          = 60
+	Timeout          = 60*60*24
 	Throttle         = 10
 	AlphavantageHost = "https://www.alphavantage.co"
 	DBName           = "golddigger"
