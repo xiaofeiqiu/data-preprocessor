@@ -153,6 +153,29 @@ func Aroon_Reader(symbol string, line []string) (*dbservice.RawDataEntity, error
 	return resp, nil
 }
 
+func MACD_Reader(symbol string, line []string) (*dbservice.RawDataEntity, error) {
+	var err error
+	resp := &dbservice.RawDataEntity{}
+	resp.Date, err = time.Parse("2006-01-02", line[0])
+	if err != nil {
+		return nil, err
+	}
+	resp.Symbol = symbol
+
+	tmp1, err := strconv.ParseFloat(line[1], 32)
+	tmp1 = math.Round(tmp1*100) / 100
+	resp.Macd = &tmp1
+
+	tmp2, err := strconv.ParseFloat(line[3], 32)
+	tmp2 = math.Round(tmp2*100) / 100
+	resp.Macd_Signal = &tmp2
+
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 func SetChanges(dailyResps []*dbservice.RawDataEntity) {
 	for _, resp := range dailyResps {
 		SetChange(resp)

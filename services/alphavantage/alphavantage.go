@@ -24,6 +24,7 @@ const SeriesTypeClose = "close"
 const FUNC_EMA = "EMA"
 const FUNC_CCI = "CCI"
 const FUNC_AROON = "AROON"
+const FUNC_MACD = "MACD"
 const FUNC_TIME_SERIES_DAILY_ADJUSTED = "TIME_SERIES_DAILY_ADJUSTED"
 
 type AlphaVantageClient struct {
@@ -40,6 +41,9 @@ type DailyRequest struct {
 	Interval   string `schema:"interval" url:"interval"`
 	TimePeriod string `schema:"time_period" url:"time_period" json:"time_period"`
 	SeriesType string `schema:"series_type" url:"series_type"`
+	FastPeriod string `schema:"fastperiod" url:"fastperiod"`
+	SlowPeriod string `schema:"slowperiod" url:"slowperiod"`
+	SignalPeriod string `schema:"signalperiod" url:"signalperiod"`
 }
 
 func (api *AlphaVantageClient) Call(req DailyRequest) (int, []byte, error) {
