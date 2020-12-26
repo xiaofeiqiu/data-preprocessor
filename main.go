@@ -69,10 +69,17 @@ func main() {
 	}
 
 	r.Get("/preprocessor/health", restutils.Health)
+
 	r.Post("/preprocessor/candle/dailyadjusted", handlers.ErrorHandler(apiHandler.InsertDailyCandle))
 	r.Post("/preprocessor/candle/missingdailyadjusted", handlers.ErrorHandler(apiHandler.InsertMissingDailyCandle))
-	r.Put("/preprocessor/ema/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyEMA))
 	r.Post("/preprocessor/processpr/doall", handlers.ErrorHandler(apiHandler.Doall))
+
+	r.Put("/preprocessor/ema/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyEMA))
+
+	r.Delete("/preprocessor/processpr/dailyrawdata", handlers.ErrorHandler(apiHandler.ClearRawData))
+
+
+
 	http.ListenAndServe(":8080", r)
 	log.Info("Init", "Server started")
 }

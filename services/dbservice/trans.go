@@ -74,3 +74,24 @@ func toInterfaceArray(data []RawDataEntity) []interface{} {
 	}
 	return result
 }
+
+// delete
+var deleteBySymbol = "delete from %s where symbol=$1"
+
+func (s *DBService) DeleteBySymbol(table, symbol string) error {
+	_, err := s.client.DB.Exec(fmt.Sprintf(deleteBySymbol, table), symbol)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+
+func (s *DBService) ClearDailyRawDataTable() error {
+	var deleteAll = "delete from %s where symbol!=$1"
+	_, err := s.client.DB.Exec(fmt.Sprintf(deleteAll, dailyRawData), "-")
+	if err != nil {
+		return err
+	}
+	return nil
+}
