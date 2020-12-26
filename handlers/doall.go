@@ -79,7 +79,7 @@ func (api *ApiHandler) Doall(w http.ResponseWriter, r *http.Request) (int, error
 	}
 	log.Info("Doall", fmt.Sprintf("fill cci %s successful", period))
 
-	// fill aroon
+	//fill aroon
 	period = "50"
 	status, err = api.fillAroon(req, period)
 	if !restutils.Is2xxStatusCode(status) {
@@ -95,7 +95,7 @@ func (api *ApiHandler) Doall(w http.ResponseWriter, r *http.Request) (int, error
 	if !restutils.Is2xxStatusCode(status) {
 		return 500, err
 	}
-	log.Info("Doall", fmt.Sprintf("fill aroon %s successful", period))
+	log.Info("Doall", fmt.Sprintf("fill macd %s successful", fast+slow+singal))
 
 	restutils.ResponseWithJson(w, 200, "successful")
 	return 0, nil
@@ -145,7 +145,7 @@ func (api *ApiHandler) fillAroon(req DoallRequest, period string) (int, error) {
 
 func (api *ApiHandler) fillMacd(req DoallRequest, fast, slow, signal string) (int, error) {
 	url := "http://localhost:8080/preprocessor/macd/dailyadjusted"
-	body := []byte(fmt.Sprintf(`"{"symbol":"%s","fastperiod":"%s","slowperiod":"%s","signalperiod":"%s"}"`, req.Symbol, fast, slow, signal))
+	body := []byte(fmt.Sprintf(`{"symbol":"%s","fastperiod":"%s","slowperiod":"%s","signalperiod":"%s"}`, req.Symbol, fast, slow, signal))
 	status, resp, err := api.DefaultClient.DoPut(url, nil, body)
 	p := fast + slow + signal
 	if err != nil {

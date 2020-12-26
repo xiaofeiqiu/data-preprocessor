@@ -93,7 +93,7 @@ func NewMacdRequest(r *http.Request) (alphavantage.DailyRequest, error) {
 	p := req.FastPeriod + req.SlowPeriod + req.SignalPeriod
 	isValid := validatePeriod(p, validMacdPeriod)
 	if !isValid {
-		err = fmt.Errorf("invalid period value")
+		err = fmt.Errorf("invalid period value, " + p)
 		log.Error("NewMacdRequest", err, "")
 		return alphavantage.DailyRequest{}, err
 	}
