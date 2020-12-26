@@ -71,6 +71,32 @@ func (api *ApiHandler) Doall(w http.ResponseWriter, r *http.Request) (int, error
 	}
 	log.Info("Doall", fmt.Sprintf("fill ema %s successful", period))
 
+	// fill cci
+	period = "100"
+	status, err = api.fillCCI(req, period)
+	if !restutils.Is2xxStatusCode(status) {
+		return 500, err
+	}
+	log.Info("Doall", fmt.Sprintf("fill cci %s successful", period))
+
+	// fill aroon
+	period = "50"
+	status, err = api.fillAroon(req, period)
+	if !restutils.Is2xxStatusCode(status) {
+		return 500, err
+	}
+	log.Info("Doall", fmt.Sprintf("fill aroon %s successful", period))
+
+	// fill macd
+	fast := "20"
+	slow := "200"
+	singal := "100"
+	status, err = api.fillMacd(req, fast, slow, singal)
+	if !restutils.Is2xxStatusCode(status) {
+		return 500, err
+	}
+	log.Info("Doall", fmt.Sprintf("fill aroon %s successful", period))
+
 	restutils.ResponseWithJson(w, 200, "successful")
 	return 0, nil
 }
@@ -85,6 +111,49 @@ func (api *ApiHandler) fillEma(req DoallRequest, period string) (int, error) {
 
 	if !restutils.Is2xxStatusCode(status) {
 		return 500, errors.New(fmt.Sprintf("fill ema %s failed, %s", period, string(resp)))
+	}
+	return 200, nil
+}
+
+func (api *ApiHandler) fillCCI(req DoallRequest, period string) (int, error) {
+	url := "http://localhost:8080/preprocessor/cci/dailyadjusted"
+	body := []byte(fmt.Sprintf(`{"symbol":"%s","time_period":"%s"}`, req.Symbol, period))
+	status, resp, err := api.DefaultClient.DoPut(url, nil, body)
+	if err != nil {
+		return 500, errors.New("error calling data pre processor, fill cci " + period + " failed, " + err.Error())
+	}
+
+	if !restutils.Is2xxStatusCode(status) {
+		return 500, errors.New(fmt.Sprintf("fill cci %s failed, %s", period, string(resp)))
+	}
+	return 200, nil
+}
+
+func (api *ApiHandler) fillAroon(req DoallRequest, period string) (int, error) {
+	url := "http://localhost:8080/preprocessor/aroon/dailyadjusted"
+	body := []byte(fmt.Sprintf(`{"symbol":"%s","time_period":"%s"}`, req.Symbol, period))
+	status, resp, err := api.DefaultClient.DoPut(url, nil, body)
+	if err != nil {
+		return 500, errors.New("error calling data pre processor, fill aroon " + period + " failed, " + err.Error())
+	}
+
+	if !restutils.Is2xxStatusCode(status) {
+		return 500, errors.New(fmt.Sprintf("fill aroon %s failed, %s", period, string(resp)))
+	}
+	return 200, nil
+}
+
+func (api *ApiHandler) fillMacd(req DoallRequest, fast, slow, signal string) (int, error) {
+	url := "http://localhost:8080/preprocessor/macd/dailyadjusted"
+	body := []byte(fmt.Sprintf(`"{"symbol":"%s","fastperiod":"%s","slowperiod":"%s","signalperiod":"%s"}"`, req.Symbol, fast, slow, signal))
+	status, resp, err := api.DefaultClient.DoPut(url, nil, body)
+	p := fast + slow + signal
+	if err != nil {
+		return 500, errors.New("error calling data pre processor, fill macd " + p + " failed, " + err.Error())
+	}
+
+	if !restutils.Is2xxStatusCode(status) {
+		return 500, errors.New(fmt.Sprintf("fill macd %s failed, %s", p, string(resp)))
 	}
 	return 200, nil
 }
