@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-var validPeriod = []string{"20", "50", "100", "200"}
+var validCCIPeriod = []string{"100"}
 
 func (api *ApiHandler) FillDailyCCI(w http.ResponseWriter, r *http.Request) (int, error) {
 
@@ -88,7 +88,7 @@ func NewCciRequest(r *http.Request) (alphavantage.DailyRequest, error) {
 		req.OutputSize = alphavantage.Compact
 	}
 
-	isValid := validatePeriod(req.TimePeriod)
+	isValid := validatePeriod(req.TimePeriod, validCCIPeriod)
 	if !isValid {
 		err = fmt.Errorf("invalid period value")
 		log.Error("NewcciRequest", err, "")
@@ -97,7 +97,6 @@ func NewCciRequest(r *http.Request) (alphavantage.DailyRequest, error) {
 
 	return req, nil
 }
-
 
 func SetCci(entries []dbservice.RawDataEntity, ccis []*dbservice.RawDataEntity, period string) int {
 	tmpMap := ToMap(ccis)

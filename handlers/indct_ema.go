@@ -89,7 +89,7 @@ func NewEmaRequest(r *http.Request) (alphavantage.DailyRequest, error) {
 		req.OutputSize = alphavantage.Compact
 	}
 
-	isValid := validatePeriod(req.TimePeriod)
+	isValid := validatePeriod(req.TimePeriod, validEMAPeriod)
 	if !isValid {
 		err = fmt.Errorf("invalid period value")
 		log.Error("NewEmaRequest", err, "")

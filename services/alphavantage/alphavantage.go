@@ -23,6 +23,7 @@ const SeriesTypeClose = "close"
 // functions
 const FUNC_EMA = "EMA"
 const FUNC_CCI = "CCI"
+const FUNC_AROON = "AROON"
 const FUNC_TIME_SERIES_DAILY_ADJUSTED = "TIME_SERIES_DAILY_ADJUSTED"
 
 type AlphaVantageClient struct {

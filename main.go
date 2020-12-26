@@ -76,6 +76,7 @@ func main() {
 
 	r.Put("/preprocessor/ema/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyEMA))
 	r.Put("/preprocessor/cci/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyCCI))
+	r.Put("/preprocessor/aroon/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyAroon))
 
 	r.Delete("/preprocessor/processpr/dailyrawdata", handlers.ErrorHandler(apiHandler.ClearRawData))
 

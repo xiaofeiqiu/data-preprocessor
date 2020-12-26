@@ -130,6 +130,29 @@ func CCI_Reader(symbol string, line []string) (*dbservice.RawDataEntity, error) 
 	return resp, nil
 }
 
+func Aroon_Reader(symbol string, line []string) (*dbservice.RawDataEntity, error) {
+	var err error
+	resp := &dbservice.RawDataEntity{}
+	resp.Date, err = time.Parse("2006-01-02", line[0])
+	if err != nil {
+		return nil, err
+	}
+	resp.Symbol = symbol
+
+	tmp1, err := strconv.ParseFloat(line[1], 32)
+	tmp1 = math.Round(tmp1*100) / 100
+	resp.AroonDown = &tmp1
+
+	tmp2, err := strconv.ParseFloat(line[2], 32)
+	tmp2 = math.Round(tmp2*100) / 100
+	resp.AroonUp = &tmp2
+
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 func SetChanges(dailyResps []*dbservice.RawDataEntity) {
 	for _, resp := range dailyResps {
 		SetChange(resp)
@@ -146,8 +169,8 @@ func ToMap(data []*dbservice.RawDataEntity) map[string]*dbservice.RawDataEntity 
 	return result
 }
 
-func validatePeriod(period string) bool {
-	for _, v := range validEMAPeriod {
+func validatePeriod(period string, validPeriods []string) bool {
+	for _, v := range validPeriods {
 		if period == v {
 			return true
 		}
