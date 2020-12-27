@@ -4,7 +4,7 @@ Todo
 1. ema 20,50,100,200
 2. cci 100
 3. Aroon 50 up, and Aroon 50 down
-4. macd 20,200,100
+4. macd 20,200,200
 
 
 Raw data

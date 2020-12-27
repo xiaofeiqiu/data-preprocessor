@@ -166,9 +166,13 @@ func MACD_Reader(symbol string, line []string) (*dbservice.RawDataEntity, error)
 	tmp1 = math.Round(tmp1*100) / 100
 	resp.Macd = &tmp1
 
-	tmp2, err := strconv.ParseFloat(line[3], 32)
+	tmp2, err := strconv.ParseFloat(line[2], 32)
 	tmp2 = math.Round(tmp2*100) / 100
-	resp.Macd_Signal = &tmp2
+	resp.MacdHist = &tmp2
+
+	tmp3, err := strconv.ParseFloat(line[3], 32)
+	tmp3 = math.Round(tmp3*100) / 100
+	resp.MacdSignal = &tmp3
 
 	if err != nil {
 		return nil, err

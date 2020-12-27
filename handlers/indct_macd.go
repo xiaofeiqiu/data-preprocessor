@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-var validMacdPeriod = []string{"20200100"}
+var validMacdPeriod = []string{"20200200"}
 
 func (api *ApiHandler) FillDailyMacd(w http.ResponseWriter, r *http.Request) (int, error) {
 
@@ -104,12 +104,13 @@ func NewMacdRequest(r *http.Request) (alphavantage.DailyRequest, error) {
 func SetMacd(entries []dbservice.RawDataEntity, Macds []*dbservice.RawDataEntity, period string) int {
 	tmpMap := ToMap(Macds)
 	count := 0
-	if period == "20200100" {
+	if period == "20200200" {
 		for i, v := range entries {
 			key := v.Date.Format(time.RFC3339)
 			if tmpMap[key] != nil {
-				entries[i].Macd_20_200_100 = tmpMap[key].Macd
-				entries[i].Macd_Signal_20_200_100 = tmpMap[key].Macd_Signal
+				entries[i].Macd_20_200_200 = tmpMap[key].Macd
+				entries[i].Macd_Signal_20_200_200 = tmpMap[key].MacdSignal
+				entries[i].Macd_Hist_20_200_200 = tmpMap[key].MacdHist
 				count++
 			}
 		}

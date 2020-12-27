@@ -90,12 +90,12 @@ func (api *ApiHandler) Doall(w http.ResponseWriter, r *http.Request) (int, error
 	// fill macd
 	fast := "20"
 	slow := "200"
-	singal := "100"
-	status, err = api.fillMacd(req, fast, slow, singal)
+	signal := "200"
+	status, err = api.fillMacd(req, fast, slow, signal)
 	if !restutils.Is2xxStatusCode(status) {
 		return 500, err
 	}
-	log.Info("Doall", fmt.Sprintf("fill macd %s successful", fast+slow+singal))
+	log.Info("Doall", fmt.Sprintf("fill macd %s successful", fast+slow+signal))
 
 	restutils.ResponseWithJson(w, 200, "successful")
 	return 0, nil
