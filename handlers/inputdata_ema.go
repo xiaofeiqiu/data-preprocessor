@@ -68,10 +68,10 @@ func SetNormalizedEma(entires []dbservice.DataInputEntity, rawData []dbservice.R
 			if err != nil {
 				log.Error("SetNormalizedEma", err, "nema200")
 			}
-			entires[i].N_EMA_20 = &nema20
-			entires[i].N_EMA_50 = &nema50
-			entires[i].N_EMA_100 = &nema100
-			entires[i].N_EMA_200 = &nema200
+			entires[i].N_EMA_20 = nema20
+			entires[i].N_EMA_50 = nema50
+			entires[i].N_EMA_100 = nema100
+			entires[i].N_EMA_200 = nema200
 		}
 	}
 

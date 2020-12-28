@@ -42,11 +42,11 @@ type RawDataEntity struct {
 	minEma *float64 `json:"-"`
 }
 
-func (e *RawDataEntity) GetNormalizedEMA(period int) (float64, error) {
+func (e *RawDataEntity) GetNormalizedEMA(period int) (*float64, error) {
 
 	err := e.loadMaxMixEma()
 	if err != nil {
-		return 0, errors.New("GetNormalizedEMA failed, " + err.Error())
+		return nil, errors.New("GetNormalizedEMA failed, " + err.Error())
 	}
 
 	switch period {
@@ -59,7 +59,7 @@ func (e *RawDataEntity) GetNormalizedEMA(period int) (float64, error) {
 	case 200:
 		return utils.Normalize(*e.EMA_200, *e.minEma, *e.maxEma), nil
 	default:
-		return 0, errors.New("GetNormalizedEMA failed, invalid period")
+		return nil, errors.New("GetNormalizedEMA failed, invalid period")
 	}
 
 }
