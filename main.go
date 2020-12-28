@@ -72,7 +72,7 @@ func main() {
 
 	r.Post("/preprocessor/candle/dailyadjusted", handlers.ErrorHandler(apiHandler.InsertDailyCandle))
 	r.Post("/preprocessor/candle/missingdailyadjusted", handlers.ErrorHandler(apiHandler.InsertMissingDailyCandle))
-	r.Post("/preprocessor/datainput/missing", handlers.ErrorHandler(apiHandler.InsertMissingDataInput))
+	r.Post("/preprocessor/datainput/missing", handlers.ErrorHandler(apiHandler.CreateDataInputEntries))
 	r.Post("/preprocessor/processpr/doall", handlers.ErrorHandler(apiHandler.Doall))
 
 	r.Put("/preprocessor/ema/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyEMA))

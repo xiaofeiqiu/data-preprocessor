@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-func (api *ApiHandler) InsertMissingDataInput(w http.ResponseWriter, r *http.Request) (int, error) {
+func (api *ApiHandler) CreateDataInputEntries(w http.ResponseWriter, r *http.Request) (int, error) {
 
 	// find missing entries
 	missingEntries := []dbservice.RawDataEntity{}
@@ -18,15 +18,15 @@ func (api *ApiHandler) InsertMissingDataInput(w http.ResponseWriter, r *http.Req
 	if err != nil {
 		return 500, errors.New("error querying missing data input entries, " + err.Error())
 	}
-	log.Info("InsertMissingDataInput", fmt.Sprintf("GetMissingDataInput successful, find %d entries", len(missingEntries)))
+	log.Info("CreateDataInputEntries", fmt.Sprintf("GetMissingDataInput successful, find %d entries", len(missingEntries)))
 
 	// set input entries
 	inputEntries := GetDataInputEntries(missingEntries)
-	log.Info("InsertMissingDataInput", strconv.Itoa(len(inputEntries))+" entries set")
+	log.Info("CreateDataInputEntries", strconv.Itoa(len(inputEntries))+" entries set")
 
 	// insert input entries
 	ct := api.DBService.InsertDataInputPtrArray(inputEntries)
-	log.Info("InsertMissingDataInput", strconv.Itoa(ct)+" inserted")
+	log.Info("CreateDataInputEntries", strconv.Itoa(ct)+" inserted")
 
 	restutils.ResponseWithJson(w, 200, strconv.Itoa(ct)+" inserted")
 	return 0, nil
