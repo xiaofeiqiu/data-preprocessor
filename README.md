@@ -34,14 +34,14 @@ diffN = (diff - diffMin)/(diffMax - diffMin)
 =================================
 Final input
 Normalized EMAs
-Normalized Diff EMAs (14 days avg diff)
+Normalized Diff EMAs (10 days avg diff)
 Normalized CCI
-Normalized Diff CCI (14 days avg diff)
-Normalized AroonUp and down (14 days avg diff)
-Normalized Diff AroonUp and down (14 days avg diff)
+Normalized Diff CCI (10 days avg diff)
+Normalized AroonUp and down (10 days avg diff)
+Normalized Diff AroonUp and down (10 days avg diff)
 Normalized Macd
-Normalized Diff Macd (14 days avg diff)
-Normalized Diff macd hist (14 days avg diff)
+Normalized Diff Macd (10 days avg diff)
+Normalized Diff macd hist (10 days avg diff)
 
 Out put:
 sell -1
@@ -49,7 +49,7 @@ hold 0
 buy 1
 
 tagging:
-change = ((today+14)' price - today' price) / today's price
+change = ((today+10)' price - today' price) / today's price
 if ABS(change) > 3%, sell or buy
 else hold
 
