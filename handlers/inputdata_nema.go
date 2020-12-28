@@ -12,14 +12,14 @@ import (
 	"time"
 )
 
-func (api *ApiHandler) DataInputFillEma(w http.ResponseWriter, r *http.Request) (int, error) {
+func (api *ApiHandler) DataInputFillNEma(w http.ResponseWriter, r *http.Request) (int, error) {
 
 	// create request and validate
-	req, err := NewDataInputEMARequest(r)
+	req, err := NewDataInputRequest(r)
 	if err != nil {
 		return 400, errors.New("error creating new ema request, " + err.Error())
 	}
-	log.Info("DataInputFillEma", "Valid data input ema request")
+	log.Info("DataInputFillNEma", "Valid data input ema request")
 
 	// find null col in data input table
 	inputData := []dbservice.DataInputEntity{}
@@ -38,7 +38,7 @@ func (api *ApiHandler) DataInputFillEma(w http.ResponseWriter, r *http.Request) 
 	if err != nil {
 		return 500, err
 	}
-	log.Info("DataInputFillEma", strconv.Itoa(ct)+" data input inserted")
+	log.Info("DataInputFillNEma", strconv.Itoa(ct)+" data input inserted")
 	restutils.ResponseWithJson(w, 200, inputData)
 
 	return 0, nil
@@ -78,7 +78,7 @@ func SetNormalizedEma(entires []dbservice.DataInputEntity, rawData []dbservice.R
 	log.Info("SetNormalizedEma", "SetNormalizedEma successful")
 }
 
-func NewDataInputEMARequest(r *http.Request) (*DataInputRequest, error) {
+func NewDataInputRequest(r *http.Request) (*DataInputRequest, error) {
 	req := DataInputRequest{}
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {

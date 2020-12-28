@@ -81,7 +81,8 @@ func main() {
 	r.Put("/preprocessor/macd/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyMacd))
 	r.Put("/preprocessor/aroonosc/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyOSC))
 
-	r.Put("/preprocessor/datainput/missingema", handlers.ErrorHandler(apiHandler.DataInputFillEma))
+	r.Put("/preprocessor/datainput/fillnema", handlers.ErrorHandler(apiHandler.DataInputFillNEma))
+	r.Put("/preprocessor/datainput/fillndiffema", handlers.ErrorHandler(apiHandler.DataInputFillNEma))
 
 	r.Delete("/preprocessor/processpr/dailyrawdata", handlers.ErrorHandler(apiHandler.ClearRawData))
 

@@ -2,6 +2,7 @@ package dbservice
 
 import (
 	"fmt"
+	"github.com/xiaofeiqiu/data-preprocessor/lib/log"
 )
 
 // insert ==================
@@ -53,12 +54,13 @@ func (s *DBService) FindNullColEntries(data *[]RawDataEntity, symbol string, col
 	return nil
 }
 
-var WhereSymbolAndDT = "where symbol=$1 and dt between $2 and $3"
+var WhereSymbolAndDT = "where symbol=$1 and dt between $2 and $3 order by dt desc"
 
 func (s *DBService) FindRawData(data []DataInputEntity) ([]RawDataEntity, error) {
 	result := []RawDataEntity{}
 
 	from, to := GetMinAndMaxDate(data)
+	log.Info("FindRawData", "Querying data from "+from+" to "+to)
 
 	where := WhereSymbolAndDT
 	query := fmt.Sprintf("%s %s", SelectFromDailyRawData, where)
@@ -68,20 +70,6 @@ func (s *DBService) FindRawData(data []DataInputEntity) ([]RawDataEntity, error)
 	}
 
 	return result, nil
-
-	//result := []*RawDataEntity{}
-	//for _, v := range data {
-	//	tmp := RawDataEntity{}
-	//	dt := v.Date.Format("2006-01-02")
-	//	where := WhereSymbolAndDT
-	//	query := fmt.Sprintf("%s %s", SelectFromDailyRawData, where)
-	//	_, err := s.client.DB.Select(&tmp, query, v.Symbol, dt)
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//	result = append(result, &tmp)
-	//}
-	//return result, nil
 }
 
 // update ==================

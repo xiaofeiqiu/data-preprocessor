@@ -16,6 +16,7 @@ type ApiHandler struct {
 }
 
 type DataInputRequest struct {
-	Symbol  string `json:"symbol" validate:"required"`
-	ColName string `json:colName validate:"required"`
+	Symbol     string `json:"symbol" validate:"required"`
+	ColName    string `json:colName validate:"required"`
+	DiffLength int    `json:diffLength`
 }

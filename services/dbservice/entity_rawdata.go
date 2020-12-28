@@ -38,8 +38,12 @@ type RawDataEntity struct {
 	Osc                    *float64  `json:"osc,omitempty" db:"-"`
 	Osc_10                 *float64  `json:"osc10,omitempty" db:"osc10"`
 
-	maxEma *float64 `json:"-"`
-	minEma *float64 `json:"-"`
+	maxEma                *float64 `json:"-"`
+	minEma                *float64 `json:"-"`
+	NormalizedDiffNEMA20  *float64 `json:"-"`
+	NormalizedDiffNEMA50  *float64 `json:"-"`
+	NormalizedDiffNEMA100 *float64 `json:"-"`
+	NormalizedDiffNEMA200 *float64 `json:"-"`
 }
 
 func (e *RawDataEntity) GetNormalizedEMA(period int) (*float64, error) {
@@ -82,4 +86,14 @@ func (e *RawDataEntity) isAnyEmaNull() bool {
 
 func (e *RawDataEntity) isMaxMinEmaNil() bool {
 	return e.minEma == nil || e.maxEma == nil
+}
+
+func (e *RawDataEntity) GetNormalizedNDiffEma(period int) (*float64, error) {
+	return nil, nil
+}
+
+type RawDataEntitySlice []RawDataEntity
+
+func (e *RawDataEntitySlice) LoadNormalizedNDiffEma(i int, length int) (*float64, error) {
+	return nil, nil
 }
