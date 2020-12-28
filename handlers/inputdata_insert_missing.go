@@ -25,17 +25,17 @@ func (api *ApiHandler) InsertMissingDataInput(w http.ResponseWriter, r *http.Req
 	log.Info("InsertMissingDataInput", strconv.Itoa(len(inputEntries))+" entries set")
 
 	// insert input entries
-	ct := api.DBService.InsertDataInput(inputEntries)
+	ct := api.DBService.InsertDataInputPtrArray(inputEntries)
 	log.Info("InsertMissingDataInput", strconv.Itoa(ct)+" inserted")
 
 	restutils.ResponseWithJson(w, 200, strconv.Itoa(ct)+" inserted")
 	return 0, nil
 }
 
-func GetDataInputEntries(source []dbservice.RawDataEntity) []*dbservice.DataInput {
-	result := []*dbservice.DataInput{}
+func GetDataInputEntries(source []dbservice.RawDataEntity) []*dbservice.DataInputEntity {
+	result := []*dbservice.DataInputEntity{}
 	for _, v := range source {
-		tmp := dbservice.DataInput{
+		tmp := dbservice.DataInputEntity{
 			Symbol: v.Symbol,
 			Date:   v.Date,
 		}

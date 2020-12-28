@@ -206,11 +206,25 @@ func SetChanges(dailyResps []*dbservice.RawDataEntity) {
 	log.Info("SetChanges", "SetChanges successful")
 }
 
-func ToMap(data []*dbservice.RawDataEntity) map[string]*dbservice.RawDataEntity {
+func SetChange(input *dbservice.RawDataEntity) {
+	tmp := (input.Close - input.Open) * 100 / input.Open
+	input.Change = math.Round(tmp*100) / 100
+}
+
+func RawDataPtrArrayToMap(data []*dbservice.RawDataEntity) map[string]*dbservice.RawDataEntity {
 	result := map[string]*dbservice.RawDataEntity{}
 
 	for _, v := range data {
 		result[v.Date.Format(time.RFC3339)] = v
+	}
+	return result
+}
+
+func RawDataArrayToMap(data []dbservice.RawDataEntity) map[string]*dbservice.RawDataEntity {
+	result := map[string]*dbservice.RawDataEntity{}
+
+	for i, v := range data {
+		result[v.Date.Format(time.RFC3339)] = &data[i]
 	}
 	return result
 }

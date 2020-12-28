@@ -102,7 +102,7 @@ func NewMacdRequest(r *http.Request) (alphavantage.DailyRequest, error) {
 }
 
 func SetMacd(entries []dbservice.RawDataEntity, Macds []*dbservice.RawDataEntity, period string) int {
-	tmpMap := ToMap(Macds)
+	tmpMap := RawDataPtrArrayToMap(Macds)
 	count := 0
 	if period == "20200200" {
 		for i, v := range entries {

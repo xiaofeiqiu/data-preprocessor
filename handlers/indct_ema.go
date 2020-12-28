@@ -100,7 +100,7 @@ func NewEmaRequest(r *http.Request) (alphavantage.DailyRequest, error) {
 }
 
 func SetEMA(entries []dbservice.RawDataEntity, emas []*dbservice.RawDataEntity, period string) int {
-	tmpMap := ToMap(emas)
+	tmpMap := RawDataPtrArrayToMap(emas)
 	count := 0
 	if period == "20" {
 		for i, v := range entries {

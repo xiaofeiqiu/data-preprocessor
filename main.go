@@ -65,7 +65,7 @@ func main() {
 
 	err = apiHandler.DBService.InitDBTableMapping()
 	if err != nil {
-		log.Fatal("Init", "error init db table mapping, " +err.Error())
+		log.Fatal("Init", "error init db table mapping, "+err.Error())
 	}
 
 	r.Get("/preprocessor/health", restutils.Health)
@@ -81,6 +81,7 @@ func main() {
 	r.Put("/preprocessor/macd/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyMacd))
 	r.Put("/preprocessor/aroonosc/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyOSC))
 
+	r.Put("/preprocessor/datainput/missingema", handlers.ErrorHandler(apiHandler.DataInputFillEma))
 
 	r.Delete("/preprocessor/processpr/dailyrawdata", handlers.ErrorHandler(apiHandler.ClearRawData))
 

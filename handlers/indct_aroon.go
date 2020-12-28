@@ -99,7 +99,7 @@ func NewAroonRequest(r *http.Request) (alphavantage.DailyRequest, error) {
 }
 
 func SetAroon(entries []dbservice.RawDataEntity, Aroons []*dbservice.RawDataEntity, period string) int {
-	tmpMap := ToMap(Aroons)
+	tmpMap := RawDataPtrArrayToMap(Aroons)
 	count := 0
 	if period == "50" {
 		for i, v := range entries {

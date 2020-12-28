@@ -99,7 +99,7 @@ func NewCciRequest(r *http.Request) (alphavantage.DailyRequest, error) {
 }
 
 func SetCci(entries []dbservice.RawDataEntity, ccis []*dbservice.RawDataEntity, period string) int {
-	tmpMap := ToMap(ccis)
+	tmpMap := RawDataPtrArrayToMap(ccis)
 	count := 0
 	if period == "100" {
 		for i, v := range entries {

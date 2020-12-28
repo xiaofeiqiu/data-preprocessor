@@ -99,7 +99,7 @@ func ƒ(r *http.Request) (alphavantage.DailyRequest, error) {
 }
 
 func SetOsc(entries []dbservice.RawDataEntity, Oscs []*dbservice.RawDataEntity, period string) int {
-	tmpMap := ToMap(Oscs)
+	tmpMap := RawDataPtrArrayToMap(Oscs)
 	count := 0
 	if period == "10" {
 		for i, v := range entries {

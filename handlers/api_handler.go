@@ -14,3 +14,8 @@ type ApiHandler struct {
 	DBService          *dbservice.DBService
 	DefaultClient      *restutils.HttpClient
 }
+
+type DataInputRequest struct {
+	Symbol  string `json:"symbol" validate:"required"`
+	ColName string `json:colName validate:"required"`
+}

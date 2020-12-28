@@ -53,6 +53,37 @@ func (s *DBService) FindNullColEntries(data *[]RawDataEntity, symbol string, col
 	return nil
 }
 
+var WhereSymbolAndDT = "where symbol=$1 and dt between $2 and $3"
+
+func (s *DBService) FindRawData(data []DataInputEntity) ([]RawDataEntity, error) {
+	result := []RawDataEntity{}
+
+	from, to := GetMinAndMaxDate(data)
+
+	where := WhereSymbolAndDT
+	query := fmt.Sprintf("%s %s", SelectFromDailyRawData, where)
+	_, err := s.client.DB.Select(&result, query, data[0].Symbol, from, to)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+
+	//result := []*RawDataEntity{}
+	//for _, v := range data {
+	//	tmp := RawDataEntity{}
+	//	dt := v.Date.Format("2006-01-02")
+	//	where := WhereSymbolAndDT
+	//	query := fmt.Sprintf("%s %s", SelectFromDailyRawData, where)
+	//	_, err := s.client.DB.Select(&tmp, query, v.Symbol, dt)
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//	result = append(result, &tmp)
+	//}
+	//return result, nil
+}
+
 // update ==================
 func (s *DBService) UpdateEntries(data []RawDataEntity) (int, error) {
 
