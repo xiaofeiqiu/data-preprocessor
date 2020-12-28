@@ -42,6 +42,8 @@ Normalized Diff AroonUp and down (10 days avg diff)
 Normalized Macd
 Normalized Diff Macd (10 days avg diff)
 Normalized Diff macd hist (10 days avg diff)
+Normalized OSC 10
+Normalized Diff OSC10 (10 days avg diff)
 
 Out put:
 sell -1

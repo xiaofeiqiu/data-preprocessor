@@ -25,6 +25,7 @@ const FUNC_EMA = "EMA"
 const FUNC_CCI = "CCI"
 const FUNC_AROON = "AROON"
 const FUNC_MACD = "MACD"
+const FUNC_AROON_OSC = "AROONOSC"
 const FUNC_TIME_SERIES_DAILY_ADJUSTED = "TIME_SERIES_DAILY_ADJUSTED"
 
 type AlphaVantageClient struct {

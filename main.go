@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	Timeout          = 60*60*24
+	Timeout          = 60 * 60 * 24
 	Throttle         = 10
 	AlphavantageHost = "https://www.alphavantage.co"
 	DBName           = "golddigger"
@@ -41,7 +41,7 @@ func main() {
 	log.Info("Init", "Get app config successful")
 
 	defaultClient := &restutils.HttpClient{
-		Client: &http.Client{},
+		Client: &http.Client{Timeout: Timeout * time.Second},
 	}
 	alphaVantageApi := &alphavantage.AlphaVantageClient{
 		Host:       AlphavantageHost,
@@ -78,6 +78,8 @@ func main() {
 	r.Put("/preprocessor/cci/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyCCI))
 	r.Put("/preprocessor/aroon/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyAroon))
 	r.Put("/preprocessor/macd/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyMacd))
+	r.Put("/preprocessor/aroonosc/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyOSC))
+
 
 	r.Delete("/preprocessor/processpr/dailyrawdata", handlers.ErrorHandler(apiHandler.ClearRawData))
 
