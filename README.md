@@ -52,3 +52,8 @@ tagging:
 change = ((today+14)' price - today' price) / today's price
 if ABS(change) > 3%, sell or buy
 else hold
+
+
+ANN
+use CategoricalCrossentropy for loss funciton
+use softmax for output activation func
