@@ -39,7 +39,7 @@ func (api *ApiHandler) DataInputFillNEma(w http.ResponseWriter, r *http.Request)
 		return 500, err
 	}
 	log.Info("DataInputFillNEma", strconv.Itoa(ct)+" data input inserted")
-	restutils.ResponseWithJson(w, 200, inputData)
+	restutils.ResponseWithJson(w, 200, "successful")
 
 	return 0, nil
 }

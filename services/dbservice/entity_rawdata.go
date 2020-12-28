@@ -87,13 +87,3 @@ func (e *RawDataEntity) isAnyEmaNull() bool {
 func (e *RawDataEntity) isMaxMinEmaNil() bool {
 	return e.minEma == nil || e.maxEma == nil
 }
-
-func (e *RawDataEntity) GetNormalizedNDiffEma(period int) (*float64, error) {
-	return nil, nil
-}
-
-type RawDataEntitySlice []RawDataEntity
-
-func (e *RawDataEntitySlice) LoadNormalizedNDiffEma(i int, length int) (*float64, error) {
-	return nil, nil
-}

@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"encoding/csv"
 	"errors"
+	"fmt"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/log"
 	"github.com/xiaofeiqiu/data-preprocessor/services/dbservice"
+	"github.com/xiaofeiqiu/data-preprocessor/services/utils"
 	"math"
 	"strconv"
 	"time"
@@ -236,4 +238,29 @@ func validatePeriod(period string, validPeriods []string) bool {
 		}
 	}
 	return false
+}
+
+func LoadNormalizedNDiffEma(rawData []dbservice.RawDataEntity, period int, diffLength int) {
+
+	ema := []*float64{}
+	for _, v := range rawData {
+		if period == 20 && v.EMA_20 != nil {
+			ema = append(ema, v.EMA_20)
+		} else if period == 50 && v.EMA_50 != nil {
+			ema = append(ema, v.EMA_50)
+		} else if period == 100 && v.EMA_100 != nil {
+			ema = append(ema, v.EMA_100)
+		} else if period == 200 && v.EMA_200 != nil {
+			ema = append(ema, v.EMA_200)
+		}
+	}
+
+	for i := 0; i < len(ema); i += diffLength {
+		if i+diffLength-1 <= len(ema) {
+			avgdiffn := utils.AvgDiffNormalized(ema, i, i+diffLength-1)
+			fmt.Printf("avg diff: %f\n", avgdiffn)
+			rawData[i].NormalizedDiffNEMA20 = &avgdiffn
+		}
+	}
+
 }

@@ -24,3 +24,5 @@ func GetMinAndMaxDate(data []DataInputEntity) (string, string) {
 
 	return ts[0].Format("2006-01-02"), ts[len(ts)-1].Format("2006-01-02")
 }
+
+

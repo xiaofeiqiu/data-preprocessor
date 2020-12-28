@@ -82,7 +82,7 @@ func main() {
 	r.Put("/preprocessor/aroonosc/dailyadjusted", handlers.ErrorHandler(apiHandler.FillDailyOSC))
 
 	r.Put("/preprocessor/datainput/fillnema", handlers.ErrorHandler(apiHandler.DataInputFillNEma))
-	r.Put("/preprocessor/datainput/fillndiffema", handlers.ErrorHandler(apiHandler.DataInputFillNEma))
+	r.Put("/preprocessor/datainput/fillndiffema", handlers.ErrorHandler(apiHandler.DataInputFillNDiffEma))
 
 	r.Delete("/preprocessor/processpr/dailyrawdata", handlers.ErrorHandler(apiHandler.ClearRawData))
 

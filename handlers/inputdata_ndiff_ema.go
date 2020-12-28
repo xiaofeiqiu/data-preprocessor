@@ -4,11 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/log"
-	"github.com/xiaofeiqiu/data-preprocessor/lib/restutils"
 	"github.com/xiaofeiqiu/data-preprocessor/services/dbservice"
 	"io/ioutil"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -34,50 +32,29 @@ func (api *ApiHandler) DataInputFillNDiffEma(w http.ResponseWriter, r *http.Requ
 	SetNormalizedNDiffEma(inputData, rawData, req.DiffLength)
 
 	//update to db
-	ct, err := api.DBService.UpdateDataInput(inputData)
-	if err != nil {
-		return 500, err
-	}
-	log.Info("DataInputFillNDiffEma", strconv.Itoa(ct)+" data input inserted")
-	restutils.ResponseWithJson(w, 200, "successful")
+	//ct, err := api.DBService.UpdateDataInput(inputData)
+	//if err != nil {
+	//	return 500, err
+	//}
+	//log.Info("DataInputFillNDiffEma", strconv.Itoa(ct)+" data input inserted")
+	//restutils.ResponseWithJson(w, 200, "successful")
 
 	return 0, nil
 }
 
 func SetNormalizedNDiffEma(entires []dbservice.DataInputEntity, rawData []dbservice.RawDataEntity, DiffLength int) {
 
-	var rawDataSlice dbservice.RawDataEntitySlice
-	rawDataSlice = rawData
-	rawDataSlice.LoadNormalizedNDiffEma(20, DiffLength)
-	rawDataSlice.LoadNormalizedNDiffEma(50, DiffLength)
-	rawDataSlice.LoadNormalizedNDiffEma(100, DiffLength)
-	rawDataSlice.LoadNormalizedNDiffEma(200, DiffLength)
+	LoadNormalizedNDiffEma(rawData, 20, DiffLength)
 	rawDataMap := RawDataArrayToMap(rawData)
 
 	for i, v := range entires {
 		if rawDataMap[v.Date.Format(time.RFC3339)] != nil {
 			dt := v.Date.Format(time.RFC3339)
 			rawData := rawDataMap[dt]
-			nNDiffEma20, err := rawData.GetNormalizedNDiffEma(20)
-			if err != nil {
-				log.Error("SetNormalizedNDiffEma", err, "nNDiffEma20")
-			}
-			nNDiffEma50, err := rawData.GetNormalizedNDiffEma(50)
-			if err != nil {
-				log.Error("SetNormalizedNDiffEma", err, "nNDiffEma50")
-			}
-			nNDiffEma100, err := rawData.GetNormalizedNDiffEma(100)
-			if err != nil {
-				log.Error("SetNormalizedNDiffEma", err, "nNDiffEma100")
-			}
-			nNDiffEma200, err := rawData.GetNormalizedNDiffEma(200)
-			if err != nil {
-				log.Error("SetNormalizedNDiffEma", err, "nNDiffEma200")
-			}
-			entires[i].NDiff_EMA_20 = nNDiffEma20
-			entires[i].NDiff_EMA_50 = nNDiffEma50
-			entires[i].NDiff_EMA_100 = nNDiffEma100
-			entires[i].NDiff_EMA_200 = nNDiffEma200
+			entires[i].NDiff_EMA_20 = rawData.NormalizedDiffNEMA20
+			entires[i].NDiff_EMA_50 = rawData.NormalizedDiffNEMA50
+			entires[i].NDiff_EMA_100 = rawData.NormalizedDiffNEMA100
+			entires[i].NDiff_EMA_200 = rawData.NormalizedDiffNEMA200
 		}
 	}
 
