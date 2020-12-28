@@ -57,3 +57,5 @@ else hold
 ANN
 use CategoricalCrossentropy for loss funciton
 use softmax for output activation func
+
+https://machinelearningmastery.com/multi-class-classification-tutorial-keras-deep-learning-library/
