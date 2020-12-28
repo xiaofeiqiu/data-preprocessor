@@ -59,3 +59,4 @@ use CategoricalCrossentropy for loss funciton
 use softmax for output activation func
 
 https://machinelearningmastery.com/multi-class-classification-tutorial-keras-deep-learning-library/
+https://www.youtube.com/watch?v=oOSXQP7C7ck
