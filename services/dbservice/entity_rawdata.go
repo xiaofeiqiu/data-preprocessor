@@ -50,6 +50,7 @@ type RawDataEntity struct {
 	NormalizedDiffAroonDown *float64 `json:"-" db:"-"`
 	NormalizedDiffMacd      *float64 `json:"-" db:"-"`
 	NormalizedDiffMacdHist  *float64 `json:"-" db:"-"`
+	NormalizedDiffOSC       *float64 `json:"-" db:"-"`
 }
 
 func (e *RawDataEntity) GetNormalizedEMA(period int) *float64 {

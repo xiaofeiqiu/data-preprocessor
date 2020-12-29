@@ -28,10 +28,5 @@ func AvgNDiff(data []*float64, from, to int) float64 {
 }
 
 func AvgDiff(data []*float64, from, to int) float64 {
-
-	deno := *data[to]
-	if deno == 0 {
-		deno = 0.05
-	}
 	return (*data[from] - *data[to]) / float64(to-from+1)
 }
