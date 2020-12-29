@@ -49,4 +49,8 @@ type DataInputEntity struct {
 
 	NDiff_Osc    *float64 `json:"osc,omitempty" db:"-"`
 	NDiff_Osc_10 *float64 `json:"ndiff_osc10,omitempty" db:"ndiff_osc10"`
+
+	Buy  *bool `json:"buy,omitempty" db:"buy"`
+	Sell *bool `json:"sell,omitempty" db:"sell"`
+	Hold *bool `json:"hold,omitempty" db:"hold"`
 }
