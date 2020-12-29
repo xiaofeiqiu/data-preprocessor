@@ -21,27 +21,22 @@ func (api *ApiHandler) DataInputFillNDiffEma(w http.ResponseWriter, r *http.Requ
 	}
 	log.Info("DataInputFillNDiffEma", "Valid data input NDiffEma request")
 
-	// find null col in data input table
-	var inputData []dbservice.DataInputEntity
-	for _, colName := range req.GetColNames() {
-		var tmp []dbservice.DataInputEntity
-		err = api.DBService.FindNullDataInput(&tmp, req.Symbol, colName)
-		if err != nil {
-			return 500, errors.New("find null" + colName + " failed")
-		}
-		inputData = append(inputData, tmp...)
+	// find entries to fill
+	entries, err := api.findEntriesToFill(req)
+	if err != nil {
+		return 500, err
 	}
 
 	// get raw data
-	rawData, err := api.DBService.FindRawData(inputData)
+	rawData, err := api.DBService.FindRawData(entries)
 	if err != nil {
 		return 500, errors.New("FindRawData failed, " + err.Error())
 	}
 
-	SetNormalizedNDiffEma(inputData, rawData, req.DiffLength)
+	SetNormalizedNDiffEma(entries, rawData, req.DiffLength)
 
 	//update to db
-	ct, err := api.DBService.UpdateDataInput(inputData)
+	ct, err := api.DBService.UpdateDataInput(entries)
 	if err != nil {
 		return 500, err
 	}
