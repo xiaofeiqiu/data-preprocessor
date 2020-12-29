@@ -39,7 +39,7 @@ func (api *ApiHandler) DataInputFillNDiffEma(w http.ResponseWriter, r *http.Requ
 		return 500, err
 	}
 	log.Info("DataInputFillNDiffEma", strconv.Itoa(ct)+" data input inserted")
-	restutils.ResponseWithJson(w, 200, strconv.Itoa(ct) + " updated")
+	restutils.ResponseWithJson(w, 200, strconv.Itoa(ct)+" updated")
 
 	return 0, nil
 }
