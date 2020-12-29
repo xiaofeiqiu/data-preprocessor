@@ -39,12 +39,12 @@ type RawDataEntity struct {
 	Osc                    *float64  `json:"osc,omitempty" db:"-"`
 	Osc_10                 *float64  `json:"osc10,omitempty" db:"osc10"`
 
-	maxEma                *float64 `json:"-"`
-	minEma                *float64 `json:"-"`
-	NormalizedDiffNEMA20  *float64 `json:"-"`
-	NormalizedDiffNEMA50  *float64 `json:"-"`
-	NormalizedDiffNEMA100 *float64 `json:"-"`
-	NormalizedDiffNEMA200 *float64 `json:"-"`
+	maxEma                *float64 `json:"-" db:"-"`
+	minEma                *float64 `json:"-" db:"-"`
+	NormalizedDiffNEMA20  *float64 `json:"-" db:"-"`
+	NormalizedDiffNEMA50  *float64 `json:"-" db:"-"`
+	NormalizedDiffNEMA100 *float64 `json:"-" db:"-"`
+	NormalizedDiffNEMA200 *float64 `json:"-" db:"-"`
 }
 
 func (e *RawDataEntity) GetNormalizedEMA(period int) *float64 {

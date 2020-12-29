@@ -33,6 +33,8 @@ func (s *DBService) InsertRawDataEntityIgnoreError(data []*RawDataEntity) int {
 		err := s.client.DB.Insert(v)
 		if err == nil {
 			count++
+		} else {
+			log.Error("InsertRawDataEntityIgnoreError", err, "")
 		}
 	}
 	return count
