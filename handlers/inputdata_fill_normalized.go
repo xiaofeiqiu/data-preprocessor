@@ -38,6 +38,7 @@ func (api *ApiHandler) DataInputFillNEma(w http.ResponseWriter, r *http.Request)
 	SetNormalizedEma(entries, rawDataMap)
 	SetNormalizedCCI(entries, rawDataMap)
 	SetNormalizedAroon(entries, rawDataMap)
+	SetNormalizedMacd(entries, rawDataMap)
 
 	//update to db
 	ct, err := api.DBService.UpdateDataInput(entries)
@@ -69,13 +70,19 @@ func (api *ApiHandler) findEntriesToFill(req *DataInputRequest) ([]dbservice.Dat
 	return entries, nil
 }
 
+func SetNormalizedMacd(entries []dbservice.DataInputEntity, rawDataMap map[string]*dbservice.RawDataEntity) {
+	for i, v := range entries {
+		if rawDataMap[v.Date.Format(time.RFC3339)] != nil {
+			entries[i].N_Macd_20_200_200 = rawDataMap[v.Date.Format(time.RFC3339)].GetNormalizedMacd()
+		}
+	}
+}
+
 func SetNormalizedAroon(entries []dbservice.DataInputEntity, rawDataMap map[string]*dbservice.RawDataEntity) {
 	for i, v := range entries {
 		if rawDataMap[v.Date.Format(time.RFC3339)] != nil {
-			if rawDataMap[v.Date.Format(time.RFC3339)].CCI_100 != nil {
-				entries[i].N_AroonUp_50 = rawDataMap[v.Date.Format(time.RFC3339)].GetNormalizedAroonUp()
-				entries[i].N_AroonDown_50 = rawDataMap[v.Date.Format(time.RFC3339)].GetNormalizedAroonDown()
-			}
+			entries[i].N_AroonUp_50 = rawDataMap[v.Date.Format(time.RFC3339)].GetNormalizedAroonUp()
+			entries[i].N_AroonDown_50 = rawDataMap[v.Date.Format(time.RFC3339)].GetNormalizedAroonDown()
 		}
 	}
 }
@@ -83,9 +90,7 @@ func SetNormalizedAroon(entries []dbservice.DataInputEntity, rawDataMap map[stri
 func SetNormalizedCCI(entries []dbservice.DataInputEntity, rawDataMap map[string]*dbservice.RawDataEntity) {
 	for i, v := range entries {
 		if rawDataMap[v.Date.Format(time.RFC3339)] != nil {
-			if rawDataMap[v.Date.Format(time.RFC3339)].CCI_100 != nil {
-				entries[i].N_CCI_100 = rawDataMap[v.Date.Format(time.RFC3339)].GetNormalizedCCI()
-			}
+			entries[i].N_CCI_100 = rawDataMap[v.Date.Format(time.RFC3339)].GetNormalizedCCI()
 		}
 	}
 }
@@ -96,22 +101,11 @@ func SetNormalizedEma(entries []dbservice.DataInputEntity, rawDataMap map[string
 		if rawDataMap[v.Date.Format(time.RFC3339)] != nil {
 			dt := v.Date.Format(time.RFC3339)
 			rawData := rawDataMap[dt]
-			nema20, err := rawData.GetNormalizedEMA(20)
-			if err != nil {
-				log.Error("SetNormalizedEma", err, "nema20")
-			}
-			nema50, err := rawData.GetNormalizedEMA(50)
-			if err != nil {
-				log.Error("SetNormalizedEma", err, "nema50")
-			}
-			nema100, err := rawData.GetNormalizedEMA(100)
-			if err != nil {
-				log.Error("SetNormalizedEma", err, "nema100")
-			}
-			nema200, err := rawData.GetNormalizedEMA(200)
-			if err != nil {
-				log.Error("SetNormalizedEma", err, "nema200")
-			}
+			nema20 := rawData.GetNormalizedEMA(20)
+			nema50 := rawData.GetNormalizedEMA(50)
+			nema100 := rawData.GetNormalizedEMA(100)
+			nema200 := rawData.GetNormalizedEMA(200)
+
 			entries[i].N_EMA_20 = nema20
 			entries[i].N_EMA_50 = nema50
 			entries[i].N_EMA_100 = nema100

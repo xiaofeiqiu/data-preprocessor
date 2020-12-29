@@ -47,40 +47,59 @@ type RawDataEntity struct {
 	NormalizedDiffNEMA200 *float64 `json:"-"`
 }
 
-func (e *RawDataEntity) GetNormalizedEMA(period int) (*float64, error) {
+func (e *RawDataEntity) GetNormalizedEMA(period int) *float64 {
 
 	err := e.loadMaxMixEma()
 	if err != nil {
-		return nil, errors.New("GetNormalizedEMA failed, " + err.Error())
+		return nil
 	}
 
 	switch period {
 	case 20:
-		return utils.Normalize(*e.EMA_20, *e.minEma, *e.maxEma, 4), nil
+		return utils.Normalize(*e.EMA_20, *e.minEma, *e.maxEma, 4)
 	case 50:
-		return utils.Normalize(*e.EMA_50, *e.minEma, *e.maxEma, 4), nil
+		return utils.Normalize(*e.EMA_50, *e.minEma, *e.maxEma, 4)
 	case 100:
-		return utils.Normalize(*e.EMA_100, *e.minEma, *e.maxEma, 4), nil
+		return utils.Normalize(*e.EMA_100, *e.minEma, *e.maxEma, 4)
 	case 200:
-		return utils.Normalize(*e.EMA_200, *e.minEma, *e.maxEma, 4), nil
+		return utils.Normalize(*e.EMA_200, *e.minEma, *e.maxEma, 4)
 	default:
-		return nil, errors.New("GetNormalizedEMA failed, invalid period")
+		return nil
 	}
 }
 
+func (e *RawDataEntity) GetNormalizedMacd() *float64 {
+	if e.Macd_20_200_200 == nil || e.Macd_Signal_20_200_200 == nil {
+		return nil
+	}
+
+	n := *e.Macd_20_200_200 / *e.Macd_Signal_20_200_200
+	n = math.Round(n*10000) / 10000
+	return &n
+}
+
 func (e *RawDataEntity) GetNormalizedAroonUp() *float64 {
+	if e.AroonUp_50 == nil {
+		return nil
+	}
 	n := *e.AroonUp_50 / float64(100)
 	n = math.Round(n*10000) / 10000
 	return &n
 }
 
 func (e *RawDataEntity) GetNormalizedAroonDown() *float64 {
+	if e.AroonDown_50 == nil {
+		return nil
+	}
 	n := *e.AroonDown_50 / float64(100)
 	n = math.Round(n*10000) / 10000
 	return &n
 }
 
 func (e *RawDataEntity) GetNormalizedCCI() *float64 {
+	if e.CCI_100 == nil {
+		return nil
+	}
 	n := *e.CCI_100 / float64(100)
 	n = math.Round(n*10000) / 10000
 	return &n
