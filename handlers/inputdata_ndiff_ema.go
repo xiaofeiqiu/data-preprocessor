@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/log"
+	"github.com/xiaofeiqiu/data-preprocessor/lib/restutils"
 	"github.com/xiaofeiqiu/data-preprocessor/services/dbservice"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -32,12 +34,12 @@ func (api *ApiHandler) DataInputFillNDiffEma(w http.ResponseWriter, r *http.Requ
 	SetNormalizedNDiffEma(inputData, rawData, req.DiffLength)
 
 	//update to db
-	//ct, err := api.DBService.UpdateDataInput(inputData)
-	//if err != nil {
-	//	return 500, err
-	//}
-	//log.Info("DataInputFillNDiffEma", strconv.Itoa(ct)+" data input inserted")
-	//restutils.ResponseWithJson(w, 200, "successful")
+	ct, err := api.DBService.UpdateDataInput(inputData)
+	if err != nil {
+		return 500, err
+	}
+	log.Info("DataInputFillNDiffEma", strconv.Itoa(ct)+" data input inserted")
+	restutils.ResponseWithJson(w, 200, strconv.Itoa(ct) + " updated")
 
 	return 0, nil
 }
@@ -45,6 +47,9 @@ func (api *ApiHandler) DataInputFillNDiffEma(w http.ResponseWriter, r *http.Requ
 func SetNormalizedNDiffEma(entires []dbservice.DataInputEntity, rawData []dbservice.RawDataEntity, DiffLength int) {
 
 	LoadNormalizedNDiffEma(rawData, 20, DiffLength)
+	LoadNormalizedNDiffEma(rawData, 50, DiffLength)
+	LoadNormalizedNDiffEma(rawData, 100, DiffLength)
+	LoadNormalizedNDiffEma(rawData, 200, DiffLength)
 	rawDataMap := RawDataArrayToMap(rawData)
 
 	for i, v := range entires {
