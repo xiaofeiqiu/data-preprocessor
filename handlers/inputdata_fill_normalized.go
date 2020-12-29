@@ -21,30 +21,25 @@ func (api *ApiHandler) DataInputFillNEma(w http.ResponseWriter, r *http.Request)
 	}
 	log.Info("DataInputFillNEma", "Valid data input ema request")
 
-	// find null col in data input table
-	inputData := []dbservice.DataInputEntity{}
-	for _, colName := range req.GetColNames() {
-		tmp := []dbservice.DataInputEntity{}
-		err = api.DBService.FindNullDataInput(&tmp, req.Symbol, colName)
-		if err != nil {
-			return 500, errors.New("find null" + colName + " failed")
-		}
-		inputData = append(inputData, tmp...)
+	// find entries to fill
+	entries, err := api.findEntriesToFill(req)
+	if err != nil {
+		return 500, err
 	}
 
 	// get raw data
-	rawData, err := api.DBService.FindRawData(inputData)
+	rawData, err := api.DBService.FindRawData(entries)
 	if err != nil {
 		return 500, errors.New("FindRawData failed, " + err.Error())
 	}
 
 	rawDataMap := RawDataArrayToMap(rawData)
 
-	SetNormalizedEma(inputData, rawDataMap)
-	SetNormalizedCCI(inputData, rawDataMap)
+	SetNormalizedEma(entries, rawDataMap)
+	SetNormalizedCCI(entries, rawDataMap)
 
 	//update to db
-	ct, err := api.DBService.UpdateDataInput(inputData)
+	ct, err := api.DBService.UpdateDataInput(entries)
 	if err != nil {
 		return 500, err
 	}
@@ -52,6 +47,25 @@ func (api *ApiHandler) DataInputFillNEma(w http.ResponseWriter, r *http.Request)
 	restutils.ResponseWithJson(w, 200, strconv.Itoa(ct)+" updated")
 
 	return 0, nil
+}
+
+func (api *ApiHandler) findEntriesToFill(req *DataInputRequest) ([]dbservice.DataInputEntity, error) {
+	entries := []dbservice.DataInputEntity{}
+	inputDataMap := map[string]*dbservice.DataInputEntity{}
+	for _, colName := range req.GetColNames() {
+		tmp := []dbservice.DataInputEntity{}
+		err := api.DBService.FindNullDataInput(&tmp, req.Symbol, colName)
+		if err != nil {
+			return nil, errors.New("find null" + colName + " failed")
+		}
+		for i, v := range tmp {
+			if inputDataMap[v.Date.Format(time.RFC3339)] == nil {
+				entries = append(entries, tmp[i])
+				inputDataMap[v.Date.Format(time.RFC3339)] = &tmp[i]
+			}
+		}
+	}
+	return entries, nil
 }
 
 func SetNormalizedCCI(entries []dbservice.DataInputEntity, rawDataMap map[string]*dbservice.RawDataEntity) {

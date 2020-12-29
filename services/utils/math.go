@@ -4,9 +4,9 @@ import (
 	"math"
 )
 
-func Normalize(x float64, min float64, max float64) *float64 {
+func Normalize(x float64, min float64, max float64, around float64) *float64 {
 	tmp := (x - min) / (max - min)
-	result := math.Round(tmp*100) / 100
+	result := math.Round(tmp*math.Pow(10, around)) / math.Pow(10, around)
 	return &result
 }
 

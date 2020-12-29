@@ -56,21 +56,49 @@ func (e *RawDataEntity) GetNormalizedEMA(period int) (*float64, error) {
 
 	switch period {
 	case 20:
-		return utils.Normalize(*e.EMA_20, *e.minEma, *e.maxEma), nil
+		return utils.Normalize(*e.EMA_20, *e.minEma, *e.maxEma, 4), nil
 	case 50:
-		return utils.Normalize(*e.EMA_50, *e.minEma, *e.maxEma), nil
+		return utils.Normalize(*e.EMA_50, *e.minEma, *e.maxEma, 4), nil
 	case 100:
-		return utils.Normalize(*e.EMA_100, *e.minEma, *e.maxEma), nil
+		return utils.Normalize(*e.EMA_100, *e.minEma, *e.maxEma, 4), nil
 	case 200:
-		return utils.Normalize(*e.EMA_200, *e.minEma, *e.maxEma), nil
+		return utils.Normalize(*e.EMA_200, *e.minEma, *e.maxEma, 4), nil
 	default:
 		return nil, errors.New("GetNormalizedEMA failed, invalid period")
 	}
 }
 
+func (e *RawDataEntity) GetNormalizedAroonUp() *float64 {
+	var min *float64
+	var max *float64
+
+	if *e.AroonDown_50 >= *e.AroonUp_50 {
+		max = e.AroonDown_50
+		min = e.AroonUp_50
+	} else {
+		max = e.AroonUp_50
+		max = e.AroonDown_50
+	}
+	return utils.Normalize(*e.AroonUp_50, *min, *max, 4)
+}
+
+func (e *RawDataEntity) GetNormalizedAroonDown() *float64 {
+	var min *float64
+	var max *float64
+
+	if *e.AroonDown_50 >= *e.AroonUp_50 {
+		max = e.AroonDown_50
+		min = e.AroonUp_50
+	} else {
+		max = e.AroonUp_50
+		max = e.AroonDown_50
+	}
+	return utils.Normalize(*e.AroonDown_50, *min, *max, 4)
+}
+
 func (e *RawDataEntity) GetNormalizedCCI() *float64 {
 	n := *e.CCI_100 / float64(100)
-	n= math.Round(n*10000) / 10000
+	n = math.Round(n*10000) / 10000
 	return &n
 }
 
