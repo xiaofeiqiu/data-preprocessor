@@ -23,7 +23,14 @@ func (api *ApiHandler) DataInputFillNEma(w http.ResponseWriter, r *http.Request)
 
 	// find null col in data input table
 	inputData := []dbservice.DataInputEntity{}
-	api.DBService.FindNullDataInput(&inputData, req.Symbol, req.ColName)
+	for _, colName := range req.GetColNames() {
+		tmp := []dbservice.DataInputEntity{}
+		err = api.DBService.FindNullDataInput(&tmp, req.Symbol, colName)
+		if err != nil {
+			return 500, errors.New("find null" + colName + " failed")
+		}
+		inputData = append(inputData, tmp...)
+	}
 
 	// get raw data
 	rawData, err := api.DBService.FindRawData(inputData)
@@ -31,7 +38,10 @@ func (api *ApiHandler) DataInputFillNEma(w http.ResponseWriter, r *http.Request)
 		return 500, errors.New("FindRawData failed, " + err.Error())
 	}
 
-	SetNormalizedEma(inputData, rawData)
+	rawDataMap := RawDataArrayToMap(rawData)
+
+	SetNormalizedEma(inputData, rawDataMap)
+	SetNormalizedCCI(inputData, rawDataMap)
 
 	//update to db
 	ct, err := api.DBService.UpdateDataInput(inputData)
@@ -39,16 +49,24 @@ func (api *ApiHandler) DataInputFillNEma(w http.ResponseWriter, r *http.Request)
 		return 500, err
 	}
 	log.Info("DataInputFillNEma", strconv.Itoa(ct)+" data input inserted")
-	restutils.ResponseWithJson(w, 200, strconv.Itoa(ct) + " updated")
+	restutils.ResponseWithJson(w, 200, strconv.Itoa(ct)+" updated")
 
 	return 0, nil
 }
 
-func SetNormalizedEma(entires []dbservice.DataInputEntity, rawData []dbservice.RawDataEntity) {
+func SetNormalizedCCI(entries []dbservice.DataInputEntity, rawDataMap map[string]*dbservice.RawDataEntity) {
+	for i, v := range entries {
+		if rawDataMap[v.Date.Format(time.RFC3339)] != nil {
+			if rawDataMap[v.Date.Format(time.RFC3339)].CCI_100 != nil {
+				entries[i].N_CCI_100 = rawDataMap[v.Date.Format(time.RFC3339)].GetNormalizedCCI()
+			}
+		}
+	}
+}
 
-	rawDataMap := RawDataArrayToMap(rawData)
+func SetNormalizedEma(entries []dbservice.DataInputEntity, rawDataMap map[string]*dbservice.RawDataEntity) {
 
-	for i, v := range entires {
+	for i, v := range entries {
 		if rawDataMap[v.Date.Format(time.RFC3339)] != nil {
 			dt := v.Date.Format(time.RFC3339)
 			rawData := rawDataMap[dt]
@@ -68,10 +86,10 @@ func SetNormalizedEma(entires []dbservice.DataInputEntity, rawData []dbservice.R
 			if err != nil {
 				log.Error("SetNormalizedEma", err, "nema200")
 			}
-			entires[i].N_EMA_20 = nema20
-			entires[i].N_EMA_50 = nema50
-			entires[i].N_EMA_100 = nema100
-			entires[i].N_EMA_200 = nema200
+			entries[i].N_EMA_20 = nema20
+			entries[i].N_EMA_50 = nema50
+			entries[i].N_EMA_100 = nema100
+			entries[i].N_EMA_200 = nema200
 		}
 	}
 

@@ -3,6 +3,7 @@ package dbservice
 import (
 	"errors"
 	"github.com/xiaofeiqiu/data-preprocessor/services/utils"
+	"math"
 	"sort"
 	"time"
 )
@@ -65,7 +66,12 @@ func (e *RawDataEntity) GetNormalizedEMA(period int) (*float64, error) {
 	default:
 		return nil, errors.New("GetNormalizedEMA failed, invalid period")
 	}
+}
 
+func (e *RawDataEntity) GetNormalizedCCI() *float64 {
+	n := *e.CCI_100 / float64(100)
+	n= math.Round(n*10000) / 10000
+	return &n
 }
 
 func (e *RawDataEntity) loadMaxMixEma() error {

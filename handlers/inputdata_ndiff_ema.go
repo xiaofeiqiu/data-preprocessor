@@ -22,8 +22,15 @@ func (api *ApiHandler) DataInputFillNDiffEma(w http.ResponseWriter, r *http.Requ
 	log.Info("DataInputFillNDiffEma", "Valid data input NDiffEma request")
 
 	// find null col in data input table
-	inputData := []dbservice.DataInputEntity{}
-	api.DBService.FindNullDataInput(&inputData, req.Symbol, req.ColName)
+	var inputData []dbservice.DataInputEntity
+	for _, colName := range req.GetColNames() {
+		var tmp []dbservice.DataInputEntity
+		err = api.DBService.FindNullDataInput(&tmp, req.Symbol, colName)
+		if err != nil {
+			return 500, errors.New("find null" + colName + " failed")
+		}
+		inputData = append(inputData, tmp...)
+	}
 
 	// get raw data
 	rawData, err := api.DBService.FindRawData(inputData)
