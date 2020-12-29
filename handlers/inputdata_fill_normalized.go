@@ -39,6 +39,7 @@ func (api *ApiHandler) DataInputFillNEma(w http.ResponseWriter, r *http.Request)
 	SetNormalizedCCI(entries, rawDataMap)
 	SetNormalizedAroon(entries, rawDataMap)
 	SetNormalizedMacd(entries, rawDataMap)
+	SetNormalizedOSC(entries, rawDataMap)
 
 	//update to db
 	ct, err := api.DBService.UpdateDataInput(entries)
@@ -68,6 +69,14 @@ func (api *ApiHandler) findEntriesToFill(req *DataInputRequest) ([]dbservice.Dat
 		}
 	}
 	return entries, nil
+}
+
+func SetNormalizedOSC(entries []dbservice.DataInputEntity, rawDataMap map[string]*dbservice.RawDataEntity) {
+	for i, v := range entries {
+		if rawDataMap[v.Date.Format(time.RFC3339)] != nil {
+			entries[i].N_Osc_10 = rawDataMap[v.Date.Format(time.RFC3339)].GetNormalizedOSC()
+		}
+	}
 }
 
 func SetNormalizedMacd(entries []dbservice.DataInputEntity, rawDataMap map[string]*dbservice.RawDataEntity) {

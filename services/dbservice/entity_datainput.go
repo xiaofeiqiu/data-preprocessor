@@ -35,13 +35,10 @@ type DataInputEntity struct {
 	N_MacdHist                   *float64 `json:"nmacdhist,omitempty" db:"-"`
 	N_MacdSignal                 *float64 `json:"nmacdsignal,omitempty" db:"-"`
 	N_Macd_20_200_200            *float64 `json:"nmacd20200200,omitempty" db:"n_macd_20200200"`
-	N_Macd_Signal_20_200_200     *float64 `json:"nmacd_signal20200200,omitempty" db:"n_macd_signal_20200200"`
-	N_Macd_Hist_20_200_200       *float64 `json:"nmacd_hist20200200,omitempty" db:"n_macd_hist_20200200"`
 	NDiff_Macd                   *float64 `json:"ndiff_macd,omitempty" db:"-"`
 	NDiff_MacdHist               *float64 `json:"ndiff_macdhist,omitempty" db:"-"`
 	NDiff_MacdSignal             *float64 `json:"ndiff_macdsignal,omitempty" db:"-"`
 	NDiff_Macd_20_200_200        *float64 `json:"ndiff_macd20200200,omitempty" db:"ndiff_macd_20200200"`
-	NDiff_Macd_Signal_20_200_200 *float64 `json:"ndiff_macd_signal20200200,omitempty" db:"ndiff_macd_signal_20200200"`
 	NDiff_Macd_Hist_20_200_200   *float64 `json:"ndiff_macd_hist20200200,omitempty" db:"ndiff_macd_hist_20200200"`
 
 	N_Osc    *float64 `json:"n_osc,omitempty" db:"-"`

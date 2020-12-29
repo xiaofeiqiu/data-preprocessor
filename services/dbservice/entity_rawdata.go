@@ -39,12 +39,16 @@ type RawDataEntity struct {
 	Osc                    *float64  `json:"osc,omitempty" db:"-"`
 	Osc_10                 *float64  `json:"osc10,omitempty" db:"osc10"`
 
-	maxEma                *float64 `json:"-" db:"-"`
-	minEma                *float64 `json:"-" db:"-"`
-	NormalizedDiffNEMA20  *float64 `json:"-" db:"-"`
-	NormalizedDiffNEMA50  *float64 `json:"-" db:"-"`
-	NormalizedDiffNEMA100 *float64 `json:"-" db:"-"`
-	NormalizedDiffNEMA200 *float64 `json:"-" db:"-"`
+	maxEma                  *float64 `json:"-" db:"-"`
+	minEma                  *float64 `json:"-" db:"-"`
+	NormalizedDiffNEMA20    *float64 `json:"-" db:"-"`
+	NormalizedDiffNEMA50    *float64 `json:"-" db:"-"`
+	NormalizedDiffNEMA100   *float64 `json:"-" db:"-"`
+	NormalizedDiffNEMA200   *float64 `json:"-" db:"-"`
+	NormalizedDiffNCCI100   *float64 `json:"-" db:"-"`
+	NormalizedDiffAroonUp   *float64 `json:"-" db:"-"`
+	NormalizedDiffAroonDown *float64 `json:"-" db:"-"`
+	NormalizedDiffMacd *float64 `json:"-" db:"-"`
 }
 
 func (e *RawDataEntity) GetNormalizedEMA(period int) *float64 {
@@ -66,6 +70,16 @@ func (e *RawDataEntity) GetNormalizedEMA(period int) *float64 {
 	default:
 		return nil
 	}
+}
+
+func (e *RawDataEntity) GetNormalizedOSC() *float64 {
+	if e.Macd_20_200_200 == nil || e.Macd_Signal_20_200_200 == nil {
+		return nil
+	}
+
+	n := *e.Osc_10 / 100
+	n = math.Round(n*10000) / 10000
+	return &n
 }
 
 func (e *RawDataEntity) GetNormalizedMacd() *float64 {
