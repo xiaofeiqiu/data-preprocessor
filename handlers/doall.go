@@ -39,37 +39,15 @@ func (api *ApiHandler) Doall(w http.ResponseWriter, r *http.Request) (int, error
 	}
 	log.Info("Doall", "Post daily successful")
 
-	// fill ema 20
-	period := "20"
-	status, err = api.fillEma(req, period)
-	if !restutils.Is2xxStatusCode(status) {
-		return 500, err
+	period := ""
+	for _, v := range validEMAPeriod {
+		period = v
+		status, err = api.fillEma(req, period)
+		if !restutils.Is2xxStatusCode(status) {
+			return 500, err
+		}
+		log.Info("Doall", fmt.Sprintf("fill ema %s successful", period))
 	}
-	log.Info("Doall", fmt.Sprintf("fill ema %s successful", period))
-
-	// fill ema 50
-	period = "50"
-	status, err = api.fillEma(req, period)
-	if !restutils.Is2xxStatusCode(status) {
-		return 500, err
-	}
-	log.Info("Doall", fmt.Sprintf("fill ema %s successful", period))
-
-	// fill ema 100
-	period = "100"
-	status, err = api.fillEma(req, period)
-	if !restutils.Is2xxStatusCode(status) {
-		return 500, err
-	}
-	log.Info("Doall", fmt.Sprintf("fill ema %s successful", period))
-
-	// fill ema 200
-	period = "200"
-	status, err = api.fillEma(req, period)
-	if !restutils.Is2xxStatusCode(status) {
-		return 500, err
-	}
-	log.Info("Doall", fmt.Sprintf("fill ema %s successful", period))
 
 	// fill cci
 	period = "100"
