@@ -57,6 +57,7 @@ func SetNormalizedNDiffEma(entires []dbservice.DataInputEntity, rawData []dbserv
 	SetNDiffCCI(rawData, DiffLength)
 	SetNDiffAroon(rawData, DiffLength)
 	SetNDiffMacd(rawData, DiffLength)
+	SetNDiffMacdHist(rawData, DiffLength)
 	rawDataMap := RawDataArrayToMap(rawData)
 
 	for i, v := range entires {
@@ -71,6 +72,7 @@ func SetNormalizedNDiffEma(entires []dbservice.DataInputEntity, rawData []dbserv
 			entires[i].NDiff_AroonDown_50 = rawData.NormalizedDiffAroonDown
 			entires[i].NDiff_AroonUp_50 = rawData.NormalizedDiffAroonUp
 			entires[i].NDiff_Macd_20_200_200 = rawData.NormalizedDiffMacd
+			entires[i].NDiff_Macd_Hist_20_200_200 = rawData.NormalizedDiffMacdHist
 		}
 	}
 
@@ -137,6 +139,22 @@ func SetNDiffMacd(rawData []dbservice.RawDataEntity, diffLength int) {
 		avgdiffn := utils.AvgDiffNormalized(macd, i, i+diffLength-1)
 		avgdiffn = math.Round(avgdiffn*10000) / 10000
 		rawData[i].NormalizedDiffMacd = &avgdiffn
+	}
+}
+
+func SetNDiffMacdHist(rawData []dbservice.RawDataEntity, diffLength int) {
+
+	var hist []*float64
+	for _, v := range rawData {
+		if v.Macd_20_200_200 != nil {
+			hist = append(hist, v.Macd_Hist_20_200_200)
+		}
+	}
+
+	for i := 0; i+diffLength-1 < len(hist); i++ {
+		avgdiffn := utils.AvgDiff(hist, i, i+diffLength-1)
+		avgdiffn = math.Round(avgdiffn*10000) / 10000
+		rawData[i].NormalizedDiffMacdHist = &avgdiffn
 	}
 }
 
