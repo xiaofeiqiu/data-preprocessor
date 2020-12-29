@@ -69,31 +69,15 @@ func (e *RawDataEntity) GetNormalizedEMA(period int) (*float64, error) {
 }
 
 func (e *RawDataEntity) GetNormalizedAroonUp() *float64 {
-	var min *float64
-	var max *float64
-
-	if *e.AroonDown_50 >= *e.AroonUp_50 {
-		max = e.AroonDown_50
-		min = e.AroonUp_50
-	} else {
-		max = e.AroonUp_50
-		max = e.AroonDown_50
-	}
-	return utils.Normalize(*e.AroonUp_50, *min, *max, 4)
+	n := *e.AroonUp_50 / float64(100)
+	n = math.Round(n*10000) / 10000
+	return &n
 }
 
 func (e *RawDataEntity) GetNormalizedAroonDown() *float64 {
-	var min *float64
-	var max *float64
-
-	if *e.AroonDown_50 >= *e.AroonUp_50 {
-		max = e.AroonDown_50
-		min = e.AroonUp_50
-	} else {
-		max = e.AroonUp_50
-		max = e.AroonDown_50
-	}
-	return utils.Normalize(*e.AroonDown_50, *min, *max, 4)
+	n := *e.AroonDown_50 / float64(100)
+	n = math.Round(n*10000) / 10000
+	return &n
 }
 
 func (e *RawDataEntity) GetNormalizedCCI() *float64 {

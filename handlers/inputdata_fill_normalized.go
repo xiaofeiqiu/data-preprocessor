@@ -37,6 +37,7 @@ func (api *ApiHandler) DataInputFillNEma(w http.ResponseWriter, r *http.Request)
 
 	SetNormalizedEma(entries, rawDataMap)
 	SetNormalizedCCI(entries, rawDataMap)
+	SetNormalizedAroon(entries, rawDataMap)
 
 	//update to db
 	ct, err := api.DBService.UpdateDataInput(entries)
@@ -66,6 +67,17 @@ func (api *ApiHandler) findEntriesToFill(req *DataInputRequest) ([]dbservice.Dat
 		}
 	}
 	return entries, nil
+}
+
+func SetNormalizedAroon(entries []dbservice.DataInputEntity, rawDataMap map[string]*dbservice.RawDataEntity) {
+	for i, v := range entries {
+		if rawDataMap[v.Date.Format(time.RFC3339)] != nil {
+			if rawDataMap[v.Date.Format(time.RFC3339)].CCI_100 != nil {
+				entries[i].N_AroonUp_50 = rawDataMap[v.Date.Format(time.RFC3339)].GetNormalizedAroonUp()
+				entries[i].N_AroonDown_50 = rawDataMap[v.Date.Format(time.RFC3339)].GetNormalizedAroonDown()
+			}
+		}
+	}
 }
 
 func SetNormalizedCCI(entries []dbservice.DataInputEntity, rawDataMap map[string]*dbservice.RawDataEntity) {
