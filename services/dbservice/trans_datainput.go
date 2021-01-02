@@ -1,6 +1,9 @@
 package dbservice
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/xiaofeiqiu/data-preprocessor/lib/log"
+)
 
 // Select======================
 var getMissingDataInput = "SELECT * FROM daily_raw_data t1 WHERE NOT EXISTS (SELECT * FROM data_input t2 WHERE t1.symbol = t2.symbol and t1.dt = t2.dt)"
@@ -14,6 +17,7 @@ func (s *DBService) GetMissingDataInput(data *[]RawDataEntity) error {
 }
 
 var SelectFromDataInput = "select * from " + dataInput
+
 func (s *DBService) FindNullDataInput(data *[]DataInputEntity, symbol string, colName string) error {
 	where := fmt.Sprintf(WhereSymbolAndNilEma, colName)
 	query := fmt.Sprintf("%s %s", SelectFromDataInput, where)
@@ -31,6 +35,8 @@ func (s *DBService) InsertDataInputPtrArray(inputData []*DataInputEntity) int {
 		err := s.client.DB.Insert(v)
 		if err == nil {
 			count++
+		} else {
+			log.Error("InsertDataInputPtrArray", err, "")
 		}
 	}
 	return count
@@ -49,5 +55,3 @@ func (s *DBService) UpdateDataInput(data []DataInputEntity) (int, error) {
 
 	return count, nil
 }
-
-

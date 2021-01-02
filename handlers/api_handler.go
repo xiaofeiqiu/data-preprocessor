@@ -17,7 +17,7 @@ type ApiHandler struct {
 }
 
 // data input
-var allCols = "n_ema20,n_ema50,n_ema100,n_ema200,ndiff_ema20,ndiff_ema50,ndiff_ema100,ndiff_ema200,n_cci100,ndiff_cci100,n_aroonup50,n_aroondown50,ndiff_aroonup50,ndiff_aroondown50,n_macd_20200200,ndiff_macd_20200200,ndiff_macd_hist_20200200,n_osc10,ndiff_osc10,buy,sell,hold"
+var allCols = "n_ema20,n_ema50,n_ema100,n_ema200,ndiff_ema20,ndiff_ema50,ndiff_ema100,ndiff_ema200,n_cci100,ndiff_cci100,n_aroonup50,n_aroondown50,ndiff_aroonup50,ndiff_aroondown50,n_macd_20200200,ndiff_macd_20200200,ndiff_macd_hist_20200200,n_osc10,ndiff_osc10,action"
 
 type DataInputRequest struct {
 	Symbol     string `json:"symbol" validate:"required"`
