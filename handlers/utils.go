@@ -229,6 +229,15 @@ func RawDataArrayToMap(data []dbservice.RawDataEntity) map[string]*dbservice.Raw
 	return result
 }
 
+func DataInputArrayToMap(data []dbservice.DataInputEntity) map[string]*dbservice.DataInputEntity {
+	result := map[string]*dbservice.DataInputEntity{}
+
+	for i, v := range data {
+		result[v.Date.Format(time.RFC3339)] = &data[i]
+	}
+	return result
+}
+
 func validatePeriod(period string, validPeriods []string) bool {
 	for _, v := range validPeriods {
 		if period == v {

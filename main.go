@@ -84,6 +84,9 @@ func main() {
 	r.Put("/preprocessor/datainput/fillnema", handlers.ErrorHandler(apiHandler.DataInputFillNEma))
 	r.Put("/preprocessor/datainput/fillndiffema", handlers.ErrorHandler(apiHandler.DataInputFillNDiffEma))
 
+	r.Put("/preprocessor/datainput/fillaction", handlers.ErrorHandler(apiHandler.DataInputFillAction))
+
+
 	r.Delete("/preprocessor/processpr/dailyrawdata", handlers.ErrorHandler(apiHandler.ClearRawData))
 
 	http.ListenAndServe(":8080", r)

@@ -31,15 +31,15 @@ type DataInputEntity struct {
 	NDiff_AroonUp_50   *float64 `json:"ndiff_aroonup50,omitempty" db:"ndiff_aroonup50"`
 	NDiff_AroonDown_50 *float64 `json:"ndiff_aroondown50,omitempty" db:"ndiff_aroondown50"`
 
-	N_Macd                       *float64 `json:"nmacd,omitempty" db:"-"`
-	N_MacdHist                   *float64 `json:"nmacdhist,omitempty" db:"-"`
-	N_MacdSignal                 *float64 `json:"nmacdsignal,omitempty" db:"-"`
-	N_Macd_20_200_200            *float64 `json:"nmacd20200200,omitempty" db:"n_macd_20200200"`
-	NDiff_Macd                   *float64 `json:"ndiff_macd,omitempty" db:"-"`
-	NDiff_MacdHist               *float64 `json:"ndiff_macdhist,omitempty" db:"-"`
-	NDiff_MacdSignal             *float64 `json:"ndiff_macdsignal,omitempty" db:"-"`
-	NDiff_Macd_20_200_200        *float64 `json:"ndiff_macd20200200,omitempty" db:"ndiff_macd_20200200"`
-	NDiff_Macd_Hist_20_200_200   *float64 `json:"ndiff_macd_hist20200200,omitempty" db:"ndiff_macd_hist_20200200"`
+	N_Macd                     *float64 `json:"nmacd,omitempty" db:"-"`
+	N_MacdHist                 *float64 `json:"nmacdhist,omitempty" db:"-"`
+	N_MacdSignal               *float64 `json:"nmacdsignal,omitempty" db:"-"`
+	N_Macd_20_200_200          *float64 `json:"nmacd20200200,omitempty" db:"n_macd_20200200"`
+	NDiff_Macd                 *float64 `json:"ndiff_macd,omitempty" db:"-"`
+	NDiff_MacdHist             *float64 `json:"ndiff_macdhist,omitempty" db:"-"`
+	NDiff_MacdSignal           *float64 `json:"ndiff_macdsignal,omitempty" db:"-"`
+	NDiff_Macd_20_200_200      *float64 `json:"ndiff_macd20200200,omitempty" db:"ndiff_macd_20200200"`
+	NDiff_Macd_Hist_20_200_200 *float64 `json:"ndiff_macd_hist20200200,omitempty" db:"ndiff_macd_hist_20200200"`
 
 	N_Osc    *float64 `json:"n_osc,omitempty" db:"-"`
 	N_Osc_10 *float64 `json:"n_osc10,omitempty" db:"n_osc10"`
@@ -47,5 +47,5 @@ type DataInputEntity struct {
 	NDiff_Osc    *float64 `json:"osc,omitempty" db:"-"`
 	NDiff_Osc_10 *float64 `json:"ndiff_osc10,omitempty" db:"ndiff_osc10"`
 
-	Action  *bool `json:"action,omitempty" db:"action, size:16"`
+	Action *string `json:"action,omitempty" db:"action, size:16"`
 }

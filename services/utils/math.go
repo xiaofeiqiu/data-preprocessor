@@ -27,6 +27,15 @@ func AvgNDiff(data []*float64, from, to int) float64 {
 	return (*data[from] - *data[to]) / deno / float64(to-from+1)
 }
 
+func PercentChange(max float64, min float64) *float64 {
+	if min == 0 {
+		min = 0.05
+	}
+	tmp := (max - min) *100 / min
+	tmp = math.Round(tmp*math.Pow(10, 2)) / math.Pow(10, 2)
+	return &tmp
+}
+
 func AvgDiff(data []*float64, from, to int) float64 {
 	return (*data[from] - *data[to]) / float64(to-from+1)
 }
