@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"errors"
+	"fmt"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/log"
 	"github.com/xiaofeiqiu/data-preprocessor/lib/restutils"
 	"github.com/xiaofeiqiu/data-preprocessor/services/dbservice"
@@ -9,6 +10,7 @@ import (
 	"math"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -61,6 +63,9 @@ func SetAction(entries []dbservice.DataInputEntity, rawData []dbservice.RawDataE
 		tmp := rawDataMap[v.Date.Format(time.RFC3339)]
 		if tmp != nil && tmp.Day30Change != nil {
 			entriesMap[v.Date.Format(time.RFC3339)].Action = GetAction(*tmp.Day30Change)
+			if strings.Contains(v.Date.Format(time.RFC3339),"2020-07-22"){
+				fmt.Printf("set %s to %s\n",v.Date.Format(time.RFC3339),*GetAction(*tmp.Day30Change))
+			}
 		}
 	}
 }
